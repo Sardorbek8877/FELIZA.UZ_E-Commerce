@@ -15,10 +15,10 @@ import uz.feliza.felizabackend.entity.template.AbstractLongEntity;
 @Entity
 public class Color extends AbstractLongEntity {
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nameUZB;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nameRUS;
 
     private String colorCode;

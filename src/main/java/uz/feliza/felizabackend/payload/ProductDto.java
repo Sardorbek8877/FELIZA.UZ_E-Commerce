@@ -30,7 +30,7 @@ public class ProductDto {
     private String referenceNumber;
 
     @NotNull
-    private Double price;
+    private Long price;
 
     @Max(value = 99, message = "Chegirma miqdori 100 dan ko'p bo'lmasligi kerak!")
     private Integer sale = 0;
@@ -40,8 +40,7 @@ public class ProductDto {
     @NotNull
     private List<Long> categoryId;
 
-    private List<Long> compatibleProductIds;
+    private Long colorId;
 
-    @NotNull
-    private List<Long> imageIdList;
+//    private List<Long> compatibleProductIds;
 }

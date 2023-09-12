@@ -6,7 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import uz.feliza.felizabackend.entity.User;
+//import uz.feliza.felizabackend.entity.User;
 
 import java.sql.Timestamp;
 
@@ -27,8 +27,8 @@ public class AbstractLongEntity {
     @UpdateTimestamp
     private Timestamp updatedAt;
 
-    @CreatedBy
-    @JoinColumn(updatable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+//    @CreatedBy
+//    @JoinColumn(updatable = false)
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private User user;
 }
