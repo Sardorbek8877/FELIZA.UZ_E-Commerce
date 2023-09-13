@@ -1,5 +1,6 @@
 package uz.feliza.felizabackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class ProductSizeVariant extends AbstractLongEntity {
     @Column(nullable = false)
     private String size;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Product product;
 }

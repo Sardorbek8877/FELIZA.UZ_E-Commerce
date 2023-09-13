@@ -10,6 +10,4 @@ public class ProductSizeVariantDto {
     private int quantity;
 
     private String size;
-
-    private Long productId;
 }

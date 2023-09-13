@@ -1,5 +1,6 @@
 package uz.feliza.felizabackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name = "product")
 public class Product extends AbstractLongEntity {
 
     @Column(nullable = false)
@@ -45,13 +46,16 @@ public class Product extends AbstractLongEntity {
     @ManyToOne
     private Color color;
 
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Product> compatibleProducts;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ProductImages> images;
+    @JsonIgnore
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ProductImages> productImages;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ProductSizeVariant> productSizeVariantList;
 
     public Product(String nameUZB, String nameRUS, String descriptionUZB, String descriptionRUS,
@@ -67,6 +71,21 @@ public class Product extends AbstractLongEntity {
         this.brand = brand;
         this.category = category;
         this.color = color;
-//        this.compatibleProducts = compatibleProducts;
+    }
+
+    public Product(String nameUZB, String nameRUS, String descriptionUZB, String descriptionRUS,
+                   String referenceNumber, Long price, Integer sale, Brand brand, List<Category> category,
+                   Color color, List<Product> compatibleProducts) {
+        this.nameUZB = nameUZB;
+        this.nameRUS = nameRUS;
+        this.descriptionUZB = descriptionUZB;
+        this.descriptionRUS = descriptionRUS;
+        this.referenceNumber = referenceNumber;
+        this.price = price;
+        this.sale = sale;
+        this.brand = brand;
+        this.category = category;
+        this.color = color;
+        this.compatibleProducts = compatibleProducts;
     }
 }

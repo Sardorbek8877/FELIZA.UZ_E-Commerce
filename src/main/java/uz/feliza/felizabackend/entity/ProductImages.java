@@ -1,5 +1,6 @@
 package uz.feliza.felizabackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
@@ -16,8 +17,8 @@ import uz.feliza.felizabackend.entity.template.AbstractLongEntity;
 @Entity
 public class ProductImages extends AbstractLongEntity {
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Product product;
 
     private String URL;
