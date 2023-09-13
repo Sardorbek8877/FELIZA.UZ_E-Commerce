@@ -42,7 +42,7 @@ public class ProductService {
 
             //CREATE PRODUCT AND SET ALL
             productResponseDto.setProduct(product);
-            productResponseDto.setCompatibleProducts(product.getCompatibleProducts());
+            productResponseDto.setCompatibleProducts(product.getCompatibleProductsId());
             productResponseDto.setProductSizeVariantList(allByProductId);
             productResponseDto.setProductImagesList(allProductImagesById);
 
@@ -68,7 +68,7 @@ public class ProductService {
 
         //CREATE PRODUCT AND SET ALL
         productResponseDto.setProduct(product);
-        productResponseDto.setCompatibleProducts(product.getCompatibleProducts());
+        productResponseDto.setCompatibleProducts(product.getCompatibleProductsId());
         productResponseDto.setProductSizeVariantList(allByProductId);
         productResponseDto.setProductImagesList(allProductImagesById);
 
@@ -102,7 +102,7 @@ public class ProductService {
         Color color = optionalColor.get();
 
         //CREATE COMPATIBLE PRODUCTS LIST AND ADD PRODUCT
-        List<Product> compatibleProductList = new ArrayList<>();
+        List<Long> compatibleProductIdList = new ArrayList<>();
         for (ProductReferenceNumberAndColorDto itemProductRefNumAndColor : productDto.getCompatibleProductIds()) {
 
             Optional<Product> optionalProduct = productRepository.findByReferenceNumberAndColorId(
@@ -110,7 +110,7 @@ public class ProductService {
 
             if (optionalProduct.isEmpty())
                 return new ApiResponse("Bunday mahsulot topilmadi", false);
-            compatibleProductList.add(optionalProduct.get());
+            compatibleProductIdList.add(optionalProduct.get().getId());
         }
 
         //CREATE PRODUCT AND ADD ALL PARAMETERS
@@ -125,7 +125,7 @@ public class ProductService {
                 brand,
                 categoryList,
                 color,
-                compatibleProductList);
+                compatibleProductIdList);
 
         //CREATE LIST<PRODUCTSIZEVARIANT>
         List<ProductSizeVariant> productSizeVariantList = new ArrayList<>();

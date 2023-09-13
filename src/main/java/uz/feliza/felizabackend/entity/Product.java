@@ -48,7 +48,7 @@ public class Product extends AbstractLongEntity {
 
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
-    private List<Product> compatibleProducts;
+    private List<Long> compatibleProductsId;
 
     @JsonIgnore
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -75,7 +75,7 @@ public class Product extends AbstractLongEntity {
 
     public Product(String nameUZB, String nameRUS, String descriptionUZB, String descriptionRUS,
                    String referenceNumber, Long price, Integer sale, Brand brand, List<Category> category,
-                   Color color, List<Product> compatibleProducts) {
+                   Color color, List<Long> compatibleProductsId) {
         this.nameUZB = nameUZB;
         this.nameRUS = nameRUS;
         this.descriptionUZB = descriptionUZB;
@@ -86,6 +86,6 @@ public class Product extends AbstractLongEntity {
         this.brand = brand;
         this.category = category;
         this.color = color;
-        this.compatibleProducts = compatibleProducts;
+        this.compatibleProductsId = compatibleProductsId;
     }
 }

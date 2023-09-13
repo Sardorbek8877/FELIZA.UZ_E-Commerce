@@ -12,7 +12,7 @@ public class ProductResponseDto {
 
     private Product product;
 
-    private List<Product> compatibleProducts;
+    private List<Long> compatibleProducts;
 
     private List<ProductSizeVariant> productSizeVariantList;
 
