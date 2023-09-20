@@ -102,13 +102,13 @@ public class ProductService {
 
         Product product = new Product();
 
-        //CREATE BRAND AND ADD PRODUCT
+        //CREATE BRAND AND SET TO PRODUCT
         Optional<Brand> optionalBrand = brandRepository.findById(productDto.getBrandId());
         if (optionalBrand.isEmpty())
             return new ApiResponse("Bunday Brend topilmadi!", false);
         Brand brand = optionalBrand.get();
 
-        //CREATE CATEGORY LIST AND ADD PRODUCT
+        //CREATE CATEGORY LIST AND SET TO PRODUCT
         List<Category> categoryList = new ArrayList<>();
         for (Long categoryId : productDto.getCategoryId()){
             Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
@@ -117,7 +117,7 @@ public class ProductService {
             categoryList.add(optionalCategory.get());
         }
 
-        //CREATE COLOR AND ADD PRODUCT
+        //CREATE COLOR AND SET TO PRODUCT
         Optional<Color> optionalColor = colorRepository.findById(productDto.getColorId());
         if (optionalColor.isEmpty())
             return new ApiResponse("Bunday rang topilmadi!", false);
@@ -125,15 +125,17 @@ public class ProductService {
 
 //        CREATE COMPATIBLE PRODUCTS LIST AND ADD PRODUCT
         List<Product> compatibleProductList = new ArrayList<>();
-        for (ProductIdDto productIdDto : productDto.getCompatibleProductIdList()) {
-            Optional<Product> optionalProduct = productRepository.findById(productIdDto.getId());
+        if (!productDto.getCompatibleProductIdList().isEmpty()){
+            for (ProductIdDto productIdDto : productDto.getCompatibleProductIdList()) {
+                Optional<Product> optionalProduct = productRepository.findById(productIdDto.getId());
 
-            if (optionalProduct.isEmpty())
-                return new ApiResponse("Bunday mahsulot topilmadi", false);
+                if (optionalProduct.isEmpty())
+                    return new ApiResponse("Bunday mahsulot topilmadi", false);
 
-            Product compatibleProduct = optionalProduct.get();
+                Product compatibleProduct = optionalProduct.get();
 
-            compatibleProductList.add(compatibleProduct);
+                compatibleProductList.add(compatibleProduct);
+            }
         }
 
 //        CREATE LIST<PRODUCTSIZEVARIANT>

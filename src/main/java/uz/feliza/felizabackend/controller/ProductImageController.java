@@ -13,13 +13,5 @@ import uz.feliza.felizabackend.service.S3Service;
 @RequestMapping("/api/productImages")
 public class ProductImageController {
 
-    @Autowired
-    ProductImagesService productImagesService;
-    @Autowired
-    S3Service s3Service;
 
-    @PostMapping("/upload")
-    public String uploadFile(@RequestParam("files")MultipartFile files){
-        return productImagesService.uploadImage("key", files).eTag();
-    }
 }
