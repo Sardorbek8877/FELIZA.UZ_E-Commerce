@@ -2,16 +2,15 @@ package uz.feliza.felizabackend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import uz.feliza.felizabackend.entity.Product;
+import org.springframework.web.multipart.MultipartFile;
 import uz.feliza.felizabackend.payload.ApiResponse;
 import uz.feliza.felizabackend.payload.ProductDto;
 import uz.feliza.felizabackend.payload.ProductResponseDto;
 import uz.feliza.felizabackend.service.ProductService;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -33,10 +32,9 @@ public class ProductController {
         return ResponseEntity.ok(productResponse);
     }
 
-    @PostMapping
-    public HttpEntity<?> addProduct(@RequestBody ProductDto productDto){
-        ApiResponse apiResponse = productService.addProduct(productDto);
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public HttpEntity<?> addProduct(@ModelAttribute ProductDto productDto , @RequestParam("files") MultipartFile[] files){
+        ApiResponse apiResponse = productService.addProduct(productDto, files);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:409).body(apiResponse);
     }
-
 }

@@ -2,6 +2,8 @@ package uz.feliza.felizabackend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 import uz.feliza.felizabackend.entity.*;
 import uz.feliza.felizabackend.payload.*;
 import uz.feliza.felizabackend.repository.*;
@@ -9,6 +11,7 @@ import uz.feliza.felizabackend.repository.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProductService {
@@ -25,6 +28,10 @@ public class ProductService {
     BrandRepository brandRepository;
     @Autowired
     ColorRepository colorRepository;
+    @Autowired
+    ProductImagesService productImagesService;
+    @Autowired
+    S3Service s3Service;
 
     public List<ProductResponseDto> getAllProducts() {
         List<Product> productList = productRepository.findAll();
@@ -34,6 +41,13 @@ public class ProductService {
         for (Product product : productList){
             ProductResponseDto productResponseDto = new ProductResponseDto();
 
+            // FIND ALL COMPATIBLE PRODUCTS AND ADD IDS TO LIST
+            List<Long> compatibleProductsIdList = new ArrayList<>();
+            for (Product compatibleProduct : product.getCompatibleProducts()){
+                compatibleProductsIdList.add(compatibleProduct.getId());
+            }
+
+
             //FIND ALL PRODUCT SIZE VARIANTS
             List<ProductSizeVariant> allByProductId = productSizeVariantRepository.findAllByProductId(product.getId());
 
@@ -42,7 +56,7 @@ public class ProductService {
 
             //CREATE PRODUCT AND SET ALL
             productResponseDto.setProduct(product);
-            productResponseDto.setCompatibleProducts(product.getCompatibleProductsId());
+            productResponseDto.setCompatibleProducts(compatibleProductsIdList);
             productResponseDto.setProductSizeVariantList(allByProductId);
             productResponseDto.setProductImagesList(allProductImagesById);
 
@@ -60,6 +74,12 @@ public class ProductService {
 
         ProductResponseDto productResponseDto = new ProductResponseDto();
 
+        // FIND ALL COMPATIBLE PRODUCTS AND ADD IDS TO LIST
+        List<Long> compatibleProductsIdList = new ArrayList<>();
+        for (Product compatibleProduct : product.getCompatibleProducts()){
+            compatibleProductsIdList.add(compatibleProduct.getId());
+        }
+
         //FIND ALL PRODUCT SIZE VARIANTS
         List<ProductSizeVariant> allByProductId = productSizeVariantRepository.findAllByProductId(product.getId());
 
@@ -68,17 +88,19 @@ public class ProductService {
 
         //CREATE PRODUCT AND SET ALL
         productResponseDto.setProduct(product);
-        productResponseDto.setCompatibleProducts(product.getCompatibleProductsId());
+        productResponseDto.setCompatibleProducts(compatibleProductsIdList);
         productResponseDto.setProductSizeVariantList(allByProductId);
         productResponseDto.setProductImagesList(allProductImagesById);
 
         return productResponseDto;
     }
 
-    public ApiResponse addProduct(ProductDto productDto){
+    public ApiResponse addProduct(ProductDto productDto, MultipartFile[] files){ //,
 
         if (productRepository.existsByReferenceNumber(productDto.getReferenceNumber()))
             return new ApiResponse("Bunday Reference raqamli mahsulot allaqachon mavjud!", false);
+
+        Product product = new Product();
 
         //CREATE BRAND AND ADD PRODUCT
         Optional<Brand> optionalBrand = brandRepository.findById(productDto.getBrandId());
@@ -101,33 +123,20 @@ public class ProductService {
             return new ApiResponse("Bunday rang topilmadi!", false);
         Color color = optionalColor.get();
 
-        //CREATE COMPATIBLE PRODUCTS LIST AND ADD PRODUCT
-        List<Long> compatibleProductIdList = new ArrayList<>();
-        for (ProductReferenceNumberAndColorDto itemProductRefNumAndColor : productDto.getCompatibleProductIds()) {
-
-            Optional<Product> optionalProduct = productRepository.findByReferenceNumberAndColorId(
-                    itemProductRefNumAndColor.getReferenceNumber(), itemProductRefNumAndColor.getId());
+//        CREATE COMPATIBLE PRODUCTS LIST AND ADD PRODUCT
+        List<Product> compatibleProductList = new ArrayList<>();
+        for (ProductIdDto productIdDto : productDto.getCompatibleProductIdList()) {
+            Optional<Product> optionalProduct = productRepository.findById(productIdDto.getId());
 
             if (optionalProduct.isEmpty())
                 return new ApiResponse("Bunday mahsulot topilmadi", false);
-            compatibleProductIdList.add(optionalProduct.get().getId());
+
+            Product compatibleProduct = optionalProduct.get();
+
+            compatibleProductList.add(compatibleProduct);
         }
 
-        //CREATE PRODUCT AND ADD ALL PARAMETERS
-        Product product = new Product(
-                productDto.getNameUZB(),
-                productDto.getNameRUS(),
-                productDto.getDescriptionUZB(),
-                productDto.getDescriptionRUS(),
-                productDto.getReferenceNumber(),
-                productDto.getPrice(),
-                productDto.getSale(),
-                brand,
-                categoryList,
-                color,
-                compatibleProductIdList);
-
-        //CREATE LIST<PRODUCTSIZEVARIANT>
+//        CREATE LIST<PRODUCTSIZEVARIANT>
         List<ProductSizeVariant> productSizeVariantList = new ArrayList<>();
         for (ProductSizeVariantDto productSizeVariantDto : productDto.getProductSizeVariantDtoList()){
             if (productSizeVariantRepository.existsByBarCode(productSizeVariantDto.getBarCode()))
@@ -140,16 +149,42 @@ public class ProductService {
                     product);
             productSizeVariantList.add(productSizeVariant);
         }
-        product.setProductSizeVariantList(productSizeVariantList);
 
         //CREATE LIST<PRODUCTIMAGE>
         List<ProductImages> productImagesList = new ArrayList<>();
-        for (ProductImagesDto productImagesDto : productDto.getProductImagesDtoList()){
-            ProductImages productImages = new ProductImages(
-                    product,
-                    productImagesDto.getUrl());
-            productImagesList.add(productImages);
+
+        for (MultipartFile imageFile : files){
+
+//          Create a unique key for the image in S3 (e.g., using UUID)
+            String s3Key = "product-images/" + UUID.randomUUID() + "-" + imageFile.getOriginalFilename();
+            String imageUrl = "https://feliza-files.s3.ap-southeast-1.amazonaws.com/" + s3Key;
+
+            //Upload the image to AWS S3
+            PutObjectResponse putObjectResponse = s3Service.uploadImage2(imageFile, s3Key);
+
+            if (putObjectResponse.sdkHttpResponse().isSuccessful()){
+                ProductImages productImages = new ProductImages();
+                productImages.setProduct(product);
+                productImages.setURL(imageUrl);
+                productImagesList.add(productImages);
+            }
+            else {
+                return new ApiResponse("Failed to upload image to S3", false);
+            }
         }
+
+        product.setNameUZB(productDto.getNameUZB());
+        product.setNameRUS(productDto.getNameRUS());
+        product.setDescriptionUZB(productDto.getDescriptionUZB());
+        product.setDescriptionRUS(productDto.getDescriptionRUS());
+        product.setReferenceNumber(productDto.getReferenceNumber());
+        product.setPrice(productDto.getPrice());
+        product.setSale(productDto.getSale());
+        product.setBrand(brand);
+        product.setCategory(categoryList);
+        product.setColor(color);
+        product.setCompatibleProducts(compatibleProductList);
+        product.setProductSizeVariantList(productSizeVariantList);
         product.setProductImages(productImagesList);
 
         productRepository.save(product);

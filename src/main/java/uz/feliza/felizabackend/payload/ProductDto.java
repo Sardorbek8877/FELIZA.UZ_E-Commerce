@@ -1,13 +1,8 @@
 package uz.feliza.felizabackend.payload;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import uz.feliza.felizabackend.entity.*;
 
 import java.util.List;
 
@@ -42,9 +37,7 @@ public class ProductDto {
 
     private Long colorId;
 
-    private List<ProductReferenceNumberAndColorDto> compatibleProductIds;
-
-    private List<ProductImagesDto> productImagesDtoList;
+    private List<ProductIdDto> compatibleProductIdList;
 
     private List<ProductSizeVariantDto> productSizeVariantDtoList;
 }
