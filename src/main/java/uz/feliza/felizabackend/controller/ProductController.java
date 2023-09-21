@@ -1,5 +1,6 @@
 package uz.feliza.felizabackend.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
@@ -32,8 +33,8 @@ public class ProductController {
         return ResponseEntity.ok(productResponse);
     }
 
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public HttpEntity<?> addProduct(@RequestBody ProductDto productDto , @RequestBody MultipartFile[] files){
+    @PostMapping(value = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public HttpEntity<?> addProduct(@Valid @RequestBody ProductDto productDto , @RequestBody MultipartFile[] files){
         ApiResponse apiResponse = productService.addProduct(productDto, files);         //RequestBody
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:409).body(apiResponse);
     }

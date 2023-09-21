@@ -36,6 +36,7 @@ public class ProductDto {
     @NotNull
     private List<Long> categoryId;
 
+    @NotNull
     private Long colorId;
 
     private List<Long> compatibleProductIdList;
