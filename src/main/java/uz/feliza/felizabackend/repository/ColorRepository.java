@@ -8,5 +8,7 @@ public interface ColorRepository extends JpaRepository<Color, Long> {
 
     boolean existsByNameUZB( String name);
 
+    boolean existsByNameRUS(String name);
+
 
 }
