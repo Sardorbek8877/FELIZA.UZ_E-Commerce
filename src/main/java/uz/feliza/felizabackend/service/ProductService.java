@@ -124,19 +124,19 @@ public class ProductService {
         Color color = optionalColor.get();
 
 //        CREATE COMPATIBLE PRODUCTS LIST AND ADD PRODUCT
-        List<Product> compatibleProductList = new ArrayList<>();
-        if (!productDto.getCompatibleProductIdList().isEmpty()){
-            for (ProductIdDto productIdDto : productDto.getCompatibleProductIdList()) {
-                Optional<Product> optionalProduct = productRepository.findById(productIdDto.getId());
-
-                if (optionalProduct.isEmpty())
-                    return new ApiResponse("Bunday mahsulot topilmadi", false);
-
-                Product compatibleProduct = optionalProduct.get();
-
-                compatibleProductList.add(compatibleProduct);
-            }
-        }
+//        List<Product> compatibleProductList = new ArrayList<>();
+//        if (!productDto.getCompatibleProductIdList().isEmpty()){
+//            for (ProductIdDto productIdDto : productDto.getCompatibleProductIdList()) {
+//                Optional<Product> optionalProduct = productRepository.findById(productIdDto.getId());
+//
+//                if (optionalProduct.isEmpty())
+//                    return new ApiResponse("Bunday mahsulot topilmadi", false);
+//
+//                Product compatibleProduct = optionalProduct.get();
+//
+//                compatibleProductList.add(compatibleProduct);
+//            }
+//        }
 
 //        CREATE LIST<PRODUCTSIZEVARIANT>
         List<ProductSizeVariant> productSizeVariantList = new ArrayList<>();
@@ -185,7 +185,7 @@ public class ProductService {
         product.setBrand(brand);
         product.setCategory(categoryList);
         product.setColor(color);
-        product.setCompatibleProducts(compatibleProductList);
+//        product.setCompatibleProducts(compatibleProductList);
         product.setProductSizeVariantList(productSizeVariantList);
         product.setProductImages(productImagesList);
 

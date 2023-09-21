@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class ProductDto {
@@ -37,7 +38,8 @@ public class ProductDto {
 
     private Long colorId;
 
-    private List<ProductIdDto> compatibleProductIdList;
+    private List<Long> compatibleProductIdList;
+    //private List<ProductIdDto> compatibleProductIdList;
 
     private List<ProductSizeVariantDto> productSizeVariantDtoList;
 }
