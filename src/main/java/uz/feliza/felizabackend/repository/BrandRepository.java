@@ -6,5 +6,5 @@ import uz.feliza.felizabackend.entity.Category;
 
 public interface BrandRepository extends JpaRepository<Brand, Long> {
 
-
+    boolean existsByName(String name);
 }
