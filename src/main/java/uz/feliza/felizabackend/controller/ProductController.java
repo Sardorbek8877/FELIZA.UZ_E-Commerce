@@ -15,11 +15,11 @@ import uz.feliza.felizabackend.service.ProductService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("/api/v1/product")
 public class ProductController {
 
     @Autowired
-    ProductService productService;
+    private ProductService productService;
 
     @GetMapping
     public ResponseEntity<?> getAllProducts(){
@@ -35,7 +35,7 @@ public class ProductController {
 
     @PostMapping(value = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public HttpEntity<?> addProduct(@Valid @RequestBody ProductDto productDto , @RequestBody MultipartFile[] files){
-        ApiResponse apiResponse = productService.addProduct(productDto, files);         //RequestBody
+        ApiResponse apiResponse = productService.addProduct(productDto, files);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:409).body(apiResponse);
     }
 }

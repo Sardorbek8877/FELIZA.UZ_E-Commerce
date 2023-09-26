@@ -2,7 +2,10 @@ package uz.feliza.felizabackend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uz.feliza.felizabackend.entity.Product;
 import uz.feliza.felizabackend.entity.ProductSizeVariant;
+import uz.feliza.felizabackend.payload.ApiResponse;
+import uz.feliza.felizabackend.payload.ProductSizeVariantDto;
 import uz.feliza.felizabackend.repository.ProductRepository;
 import uz.feliza.felizabackend.repository.ProductSizeVariantRepository;
 
@@ -24,7 +27,6 @@ public class ProductSizeVariantService {
     public ProductSizeVariant getProductSizeVariantById(Long id){
         Optional<ProductSizeVariant> optionalProductSizeVariant = productSizeVariantRepository.findById(id);
         return optionalProductSizeVariant.orElseGet(ProductSizeVariant::new);
-
     }
 
 //    public ApiResponse addProductSizeVariant(ProductSizeVariantDto productSizeVariantDto){

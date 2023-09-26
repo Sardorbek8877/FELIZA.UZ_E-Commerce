@@ -29,7 +29,7 @@ public class Product extends AbstractLongEntity {
     private String descriptionRUS;
 
     @Column(nullable = false, unique = true)
-    private String referenceNumber;
+    private String referenceNumber;//ref-1001
 
     @Column(nullable = false)
     private Long price;
@@ -45,7 +45,6 @@ public class Product extends AbstractLongEntity {
 
     @ManyToOne
     private Color color;
-
 
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Product> compatibleProducts;

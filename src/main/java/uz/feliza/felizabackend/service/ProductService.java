@@ -47,7 +47,6 @@ public class ProductService {
                 compatibleProductsIdList.add(compatibleProduct.getId());
             }
 
-
             //FIND ALL PRODUCT SIZE VARIANTS
             List<ProductSizeVariant> allByProductId = productSizeVariantRepository.findAllByProductId(product.getId());
 
@@ -64,7 +63,6 @@ public class ProductService {
         }
         return productResponseDtoList;
     }
-
 
     public ProductResponseDto getProductById(Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
@@ -95,7 +93,7 @@ public class ProductService {
         return productResponseDto;
     }
 
-    public ApiResponse addProduct(ProductDto productDto, MultipartFile[] files){ //,
+    public ApiResponse addProduct(ProductDto productDto, MultipartFile[] files){
 
         if (productRepository.existsByReferenceNumber(productDto.getReferenceNumber()))
             return new ApiResponse("Bunday Reference raqamli mahsulot allaqachon mavjud!", false);
