@@ -15,7 +15,7 @@ import uz.feliza.felizabackend.service.ProductService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/product")
+@RequestMapping("/api/product")
 public class ProductController {
 
     @Autowired

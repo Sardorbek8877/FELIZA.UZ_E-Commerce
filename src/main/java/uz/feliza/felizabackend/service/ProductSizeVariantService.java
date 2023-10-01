@@ -29,6 +29,17 @@ public class ProductSizeVariantService {
         return optionalProductSizeVariant.orElseGet(ProductSizeVariant::new);
     }
 
+    public ApiResponse checkProductSizeVariantQuantity(Long id, int quantity){
+        Optional<ProductSizeVariant> optionalProductSizeVariant = productSizeVariantRepository.findById(id);
+        if (optionalProductSizeVariant.isEmpty())
+            return new ApiResponse("Mahsulot topilmadi", false);
+        ProductSizeVariant productSizeVariant = optionalProductSizeVariant.get();
+        if (productSizeVariant.getQuantity() < quantity){
+            return new ApiResponse("Mahsulot yetarli miqdorda mavjud emas", false);
+        }
+        return new ApiResponse("Mahsulot yetarli miqdorda mavjud", true);
+    }
+
 //    public ApiResponse addProductSizeVariant(ProductSizeVariantDto productSizeVariantDto){
 //
 //        if (productSizeVariantRepository.existsByBarCode(productSizeVariantDto.getBarCode()))

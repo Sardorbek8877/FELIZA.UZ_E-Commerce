@@ -27,6 +27,11 @@ public class ProductSizeVariantController {
         return ResponseEntity.ok(productSizeVariantService.getProductSizeVariantById(id));
     }
 
+    @PostMapping("/{id}")
+    public HttpEntity<?> checkProductSizeVariantQuantity(@PathVariable Long id, @RequestBody int quantity){
+        return ResponseEntity.ok(productSizeVariantService.checkProductSizeVariantQuantity(id, quantity));
+    }
+
 //    @PostMapping
 //    public HttpEntity<?> addProductSizeVariant(@RequestBody ProductSizeVariantDto productSizeVariantDto){
 //        ApiResponse apiResponse = productSizeVariantService.addProductSizeVariant(productSizeVariantDto);

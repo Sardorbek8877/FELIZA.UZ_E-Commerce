@@ -1,28 +1,24 @@
 package uz.feliza.felizabackend.entity;
 
-
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import uz.feliza.felizabackend.entity.template.AbstractLongEntity;
 
+import java.time.LocalDate;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class OrderDetails extends AbstractLongEntity {
+public class CustomersWaitingStatus extends AbstractLongEntity {
 
-    @ManyToOne
-    private Order order;
+    private Long customerId;
 
-    @ManyToOne
-    private ProductSizeVariant productSizeVariant;
+    private Long couponId;
 
-    private int quantity; // 2
-
-    private Long productCost;
+    private LocalDate givenDate;
 }

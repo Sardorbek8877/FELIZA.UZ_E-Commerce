@@ -60,8 +60,6 @@ public class CartItemService {
             return new ApiResponse("Haridor topilmadi", false);
         Customer customer = optionalCustomer.get();
 
-
-
         CartItem cartItem = new CartItem(customer, productSizeVariant, cartItemDto.getQuantity());
         cartItemRepository.save(cartItem);
         return new ApiResponse("Mahsulot savatchaga qo'shildi)", true);

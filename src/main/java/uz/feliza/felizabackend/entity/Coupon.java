@@ -16,8 +16,8 @@ import uz.feliza.felizabackend.entity.template.AbstractLongEntity;
 public class Coupon extends AbstractLongEntity {
 
     @Column(nullable = false)
-    private String name;
+    private String name; //8MART
 
     @Column(nullable = false)
-    private Long credit;
+    private Long credit; // 20 000
 }
