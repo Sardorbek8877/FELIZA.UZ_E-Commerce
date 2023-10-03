@@ -50,6 +50,12 @@ public class OrderController {
         return ResponseEntity.ok(getAllByCustomerId);
     }
 
+    @GetMapping("/getByPostSendNumber")
+    public HttpEntity<?> getByPostSendNumber( @RequestBody String postSendNumber){
+        ApiResponse byPostSendNumber = orderService.getByPostSendNumber(postSendNumber);
+        return ResponseEntity.ok(byPostSendNumber);
+    }
+
     @PostMapping
     public HttpEntity<?> addOrder(@RequestBody OrderDto orderDto){
         ApiResponse apiResponse = orderService.addOrder(orderDto);

@@ -15,10 +15,13 @@ import java.util.Optional;
 @Service
 public class ProductSizeVariantService {
 
-    @Autowired
-    ProductSizeVariantRepository productSizeVariantRepository;
-    @Autowired
-    ProductRepository productRepository;
+    private final ProductSizeVariantRepository productSizeVariantRepository;
+    private final ProductRepository productRepository;
+    public ProductSizeVariantService(ProductSizeVariantRepository productSizeVariantRepository,
+                                     ProductRepository productRepository){
+        this.productSizeVariantRepository = productSizeVariantRepository;
+        this.productRepository = productRepository;
+    }
 
     public List<ProductSizeVariant> getAllProductSizeVariant(){
         return productSizeVariantRepository.findAll();

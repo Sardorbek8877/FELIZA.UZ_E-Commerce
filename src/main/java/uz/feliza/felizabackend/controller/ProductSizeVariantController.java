@@ -14,8 +14,11 @@ import java.util.List;
 @RequestMapping("/api/productSizeVariant")
 public class ProductSizeVariantController {
 
-    @Autowired
-    ProductSizeVariantService productSizeVariantService;
+
+    private final ProductSizeVariantService productSizeVariantService;
+    public ProductSizeVariantController(ProductSizeVariantService productSizeVariantService){
+        this.productSizeVariantService = productSizeVariantService;
+    }
 
     @GetMapping
     public HttpEntity<?> getAllProductSizeVariant(){

@@ -12,11 +12,13 @@ public class OrderDto {
 
     private Long customerId;
 
+    private String orderNumber;
+
     private List<Long> cartItemIdList;
 
     private String paymentMethod;
 
-    private Long orderCost;
+//    private Long orderCost;
 
 //    private String orderStatus;
 

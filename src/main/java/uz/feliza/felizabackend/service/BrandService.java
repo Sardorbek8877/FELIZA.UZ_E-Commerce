@@ -15,8 +15,10 @@ import java.util.Optional;
 @Service
 public class BrandService {
 
-    @Autowired
-    BrandRepository brandRepository;
+    private final BrandRepository brandRepository;
+    public BrandService(BrandRepository brandRepository){
+        this.brandRepository = brandRepository;
+    }
 
     // Method to retrieve a list of all brands.
     public List<Brand> getAllBrands(){

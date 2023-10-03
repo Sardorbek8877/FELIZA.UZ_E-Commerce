@@ -1,5 +1,6 @@
 package uz.feliza.felizabackend.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,10 @@ import java.util.List;
 @RequestMapping("/api/brand")
 public class BrandController {
 
-    @Autowired
-    BrandService brandService;
+    private final BrandService brandService;
+    public BrandController(BrandService brandService){
+        this.brandService = brandService;
+    }
 
     // Endpoint to retrieve a list of all brands.
     @GetMapping
@@ -32,14 +35,14 @@ public class BrandController {
     }
 
     @PostMapping("/add")
-    public HttpEntity<?> addBrand(@RequestBody Brand brand){
+    public HttpEntity<?> addBrand(@Valid @RequestBody Brand brand){
         ApiResponse apiResponse = brandService.addBrand(brand);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:409).body(apiResponse);
     }
 
     // Endpoint to edit the name of an existing Brand by its ID.
     @PutMapping("{id}")
-    public HttpEntity<?> editBrand(@PathVariable Long id, @RequestBody Brand brand){
+    public HttpEntity<?> editBrand(@Valid @PathVariable Long id, @RequestBody Brand brand){
         ApiResponse apiResponse = brandService.editBrand(id, brand);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:404).body(apiResponse);
     }

@@ -7,4 +7,6 @@ import uz.feliza.felizabackend.entity.enums.OrderStatusType;
 public class EditOrderStatusDto {
 
     private OrderStatusType orderStatusType;
+
+    private String postSendNumber;
 }

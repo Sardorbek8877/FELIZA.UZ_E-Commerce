@@ -16,22 +16,31 @@ import java.util.UUID;
 @Service
 public class ProductService {
 
-    @Autowired
-    ProductRepository productRepository;
-    @Autowired
-    ProductSizeVariantRepository productSizeVariantRepository;
-    @Autowired
-    ProductImagesRepository productImagesRepository;
-    @Autowired
-    CategoryRepository categoryRepository;
-    @Autowired
-    BrandRepository brandRepository;
-    @Autowired
-    ColorRepository colorRepository;
-    @Autowired
-    ProductImagesService productImagesService;
-    @Autowired
-    S3Service s3Service;
+    private final ProductRepository productRepository;
+    private final ProductSizeVariantRepository productSizeVariantRepository;
+    private final ProductImagesRepository productImagesRepository;
+    private final CategoryRepository categoryRepository;
+    private final BrandRepository brandRepository;
+    private final ColorRepository colorRepository;
+    private final ProductImagesService productImagesService;
+    private final S3Service s3Service;
+    public ProductService(ProductRepository productRepository,
+                          ProductSizeVariantRepository productSizeVariantRepository,
+                          ProductImagesRepository productImagesRepository,
+                          CategoryRepository categoryRepository,
+                          BrandRepository brandRepository,
+                          ColorRepository colorRepository,
+                          ProductImagesService productImagesService,
+                          S3Service s3Service){
+        this.productRepository = productRepository;
+        this.productSizeVariantRepository = productSizeVariantRepository;
+        this.productImagesRepository = productImagesRepository;
+        this.categoryRepository = categoryRepository;
+        this.brandRepository = brandRepository;
+        this.colorRepository = colorRepository;
+        this.productImagesService = productImagesService;
+        this.s3Service = s3Service;
+    }
 
     public List<ProductResponseDto> getAllProducts() {
         List<Product> productList = productRepository.findAll();

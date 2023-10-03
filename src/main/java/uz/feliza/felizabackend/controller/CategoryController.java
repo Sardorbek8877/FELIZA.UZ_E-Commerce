@@ -17,8 +17,11 @@ import java.util.List;
 @RequestMapping("/api/category")
 public class CategoryController {
 
-    @Autowired
-    CategoryService categoryService;
+
+    private final CategoryService categoryService;
+    public CategoryController(CategoryService categoryService){
+        this.categoryService = categoryService;
+    }
 
     // Endpoint to retrieve a list of all categories.
     @GetMapping

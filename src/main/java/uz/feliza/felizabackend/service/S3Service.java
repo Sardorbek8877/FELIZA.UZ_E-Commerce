@@ -13,8 +13,11 @@ import java.io.IOException;
 @Service
 public class S3Service {
 
-    @Autowired
-    S3Client s3Client;
+    private final S3Client s3Client;
+    public S3Service(S3Client s3Client){
+        this.s3Client = s3Client;
+    }
+
     public PutObjectResponse uploadImage2(MultipartFile file, String fileKey){
         final  String bucketName = "feliza-files";
 

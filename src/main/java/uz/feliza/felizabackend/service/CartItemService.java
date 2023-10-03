@@ -50,6 +50,7 @@ public class CartItemService {
         if (exists){
             Optional<CartItem> optionalCartItem = cartItemRepository.findByProductSizeVariant(productSizeVariant);
             CartItem cartItem = optionalCartItem.get();
+
             cartItem.setQuantity(cartItem.getQuantity() + cartItemDto.getQuantity());
             cartItemRepository.save(cartItem);
             return new ApiResponse("Mahsulot soni ko'paytirildi", true);

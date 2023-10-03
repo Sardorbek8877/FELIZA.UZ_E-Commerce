@@ -28,6 +28,10 @@ public class Order extends AbstractLongEntity {
     @OneToMany
     private List<CartItem> cartItemList;
 
+    private String orderNumber;
+
+    private String postSendNumber;
+
     private LocalDate orderTime;
 
     private String paymentMethod;

@@ -14,8 +14,10 @@ import java.util.Optional;
 @Service
 public class CategoryService {
 
-    @Autowired
-    CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
+    public CategoryService(CategoryRepository categoryRepository){
+        this.categoryRepository = categoryRepository;
+    }
 
     // Method to retrieve a list of all categories.
     public List<Category> getAllCategory(){

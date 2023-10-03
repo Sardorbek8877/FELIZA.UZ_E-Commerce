@@ -1,5 +1,6 @@
 package uz.feliza.felizabackend.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class AddressController {
     }
 
     @PostMapping("/addAddress")
-    public HttpEntity<?> addAddress(@RequestBody AddressDto addressDto){
+    public HttpEntity<?> addAddress(@Valid @RequestBody AddressDto addressDto){
         ApiResponse apiResponse = addressService.addAddress(addressDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? HttpStatus.ACCEPTED : HttpStatus.CONFLICT).body(apiResponse);
     }

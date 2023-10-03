@@ -12,8 +12,10 @@ import java.util.Optional;
 @Service
 public class ColorService {
 
-    @Autowired
-    ColorRepository colorRepository;
+    private final ColorRepository colorRepository;
+    public ColorService(ColorRepository colorRepository){
+        this.colorRepository = colorRepository;
+    }
 
     public List<Color> getAllColor(){
         return colorRepository.findAll();

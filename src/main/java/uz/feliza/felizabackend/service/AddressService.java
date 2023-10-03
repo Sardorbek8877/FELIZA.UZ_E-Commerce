@@ -16,10 +16,13 @@ import java.util.Optional;
 @Service
 public class AddressService {
 
-    @Autowired
-    AddressRepository addressRepository;
-    @Autowired
-    CustomerRepository customerRepository;
+    private final AddressRepository addressRepository;
+    private final CustomerRepository customerRepository;
+    public AddressService(AddressRepository addressRepository,
+                          CustomerRepository customerRepository){
+        this.addressRepository = addressRepository;
+        this.customerRepository = customerRepository;
+    }
 
     public List<Address> getAddresses(){
         return addressRepository.findAll();

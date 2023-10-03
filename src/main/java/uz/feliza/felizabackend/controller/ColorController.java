@@ -14,8 +14,11 @@ import java.util.List;
 @RequestMapping("/api/color")
 public class ColorController {
 
-    @Autowired
-    ColorService colorService;
+
+    private final ColorService colorService;
+    public ColorController(ColorService colorService){
+        this.colorService = colorService;
+    }
 
     @GetMapping
     public HttpEntity<?> getAllColors(){
