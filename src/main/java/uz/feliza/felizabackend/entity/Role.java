@@ -8,21 +8,25 @@ import lombok.NoArgsConstructor;
 //import org.springframework.security.core.GrantedAuthority;
 //import uz.feliza.felizabackend.entity.enums.RoleName;
 import org.springframework.security.core.GrantedAuthority;
+import uz.feliza.felizabackend.entity.enums.RoleName;
 import uz.feliza.felizabackend.entity.template.AbstractLongEntity;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-//@AllArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "roles")
 public class Role extends AbstractLongEntity implements GrantedAuthority { // implements GrantedAuthority
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(length = 150, nullable = false)
     private String description;
+
+    @Enumerated(value = EnumType.STRING)
+    private RoleName roleName;
 
     public Role(String name) {
         this.name = name;
