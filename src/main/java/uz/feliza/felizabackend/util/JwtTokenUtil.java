@@ -7,9 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import uz.feliza.felizabackend.entity.Customer;
 import uz.feliza.felizabackend.entity.User;
 
 import java.security.Key;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,21 +23,18 @@ public class JwtTokenUtil {
     @Value("${app.jwt.secret}")
     private String secretKey;
 
-    @Value("${app.jwt.expire.duration}")
-    private String expireDuration;
-
-    public String generateAccessToken(User user){
-        return generateAccessToken(new HashMap<>(),user);
+    public String generateAccessToken(Customer customer) throws ParseException {
+        return generateAccessToken(new HashMap<>(),customer);
     }
 
-    public String generateAccessToken(Map<String,Object> extraClaims, User user){
+    public String generateAccessToken(Map<String,Object> extraClaims, Customer customer){
         return Jwts.builder()
                 .setClaims(extraClaims)
-                .setSubject(String.format("%s,%s", user.getId(), user.getEmail()))
+                .setSubject(String.format("%s,%s", customer.getId(), customer.getEmail()))
                 .setIssuer("CodeJava")
-                .claim("roles",user.getRoles().toString())
+                .claim("roles", customer.getRoles().toString())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expireDuration))
+                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.JWT_EXPIRATION))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

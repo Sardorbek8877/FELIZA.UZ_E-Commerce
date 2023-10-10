@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.NaturalId;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import uz.feliza.felizabackend.entity.template.AbstractLongEntity;
@@ -20,7 +21,10 @@ import java.util.*;
 public class User extends AbstractLongEntity implements UserDetails {
 
     @Column(nullable = false)
-    private String fullName;
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;
 
     @Column(nullable = false)
     private Date birthDate;
@@ -32,12 +36,13 @@ public class User extends AbstractLongEntity implements UserDetails {
     private String password;
 
     @Column(length = 50, nullable = false, unique = true)
+    @NaturalId(mutable = true)
     private String email;
 
     @Column(length = 128)
     private String photos;
 
-    private boolean enabled;
+    private boolean enabled = false;
 
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -49,8 +54,9 @@ public class User extends AbstractLongEntity implements UserDetails {
         this.email = email;
     }
 
-    public User(String fullName, Date birthDate, String phoneNumber, String password, String email, String photos, boolean enabled) {
-        this.fullName = fullName;
+    public User(String firstName,String lastName, Date birthDate, String phoneNumber, String password, String email, String photos, boolean enabled) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
         this.password = password;

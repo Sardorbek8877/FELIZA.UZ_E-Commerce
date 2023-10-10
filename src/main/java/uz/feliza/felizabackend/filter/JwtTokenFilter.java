@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import uz.feliza.felizabackend.entity.Customer;
 import uz.feliza.felizabackend.entity.Role;
 import uz.feliza.felizabackend.entity.User;
 import uz.feliza.felizabackend.util.JwtTokenUtil;
@@ -51,7 +52,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     private UserDetails getUserDetails(String accessToken) {
-        User userDetails = new User();
+        Customer customerDetails = new Customer();
         Claims claims = jwtTokenUtil.parseClaims(accessToken);
 
         String claimRoles = (String) claims.get("roles");
@@ -62,15 +63,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String[] rolesNames = claimRoles.split(",");
 
         for (String aRoleName : rolesNames){
-            userDetails.addRole(new Role(aRoleName));
+            customerDetails.addRole(new Role(aRoleName));
         }
 
         String subject = (String) claims.get(Claims.SUBJECT);
         String[] subjectArray = subject.split(",");
 
-        userDetails.setId(Long.parseLong(subjectArray[0]));
-        userDetails.setEmail(subjectArray[1]);
-        return userDetails;
+        customerDetails.setId(Long.parseLong(subjectArray[0]));
+        customerDetails.setEmail(subjectArray[1]);
+        return customerDetails;
     }
 
     private boolean hasAuthorizationHeader(HttpServletRequest request){
