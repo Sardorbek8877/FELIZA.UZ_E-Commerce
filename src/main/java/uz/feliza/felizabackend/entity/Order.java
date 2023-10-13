@@ -1,9 +1,6 @@
 package uz.feliza.felizabackend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -38,6 +35,7 @@ public class Order extends AbstractLongEntity {
 
     private Long orderCost;
 
+    @Enumerated(value = EnumType.STRING)
     private OrderStatusType orderStatusType; //buyurtma berildi, jo'natildi, yetib bordi, bekor qilindi editOrderStatus()
 
     private String shippingStatus;

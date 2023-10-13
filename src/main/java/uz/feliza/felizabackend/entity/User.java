@@ -17,7 +17,7 @@ import java.util.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "users")
+@Entity(name = "users1")
 public class User extends AbstractLongEntity implements UserDetails {
 
     @Column(nullable = false)
@@ -44,7 +44,7 @@ public class User extends AbstractLongEntity implements UserDetails {
 
     private boolean enabled = false;
 
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();

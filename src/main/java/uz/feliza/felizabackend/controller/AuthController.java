@@ -33,6 +33,7 @@ public class AuthController {
     private final ApplicationEventPublisher publisher;
     private final VerificationTokenRepository tokenRepository;
     private final AuthenticationManager authenticationManager;
+
     @PostMapping("/register")
     public String registerUser(@RequestBody RegisterRequest registerRequest, final HttpServletRequest httpServletRequest){
         Customer customer = authService.register(registerRequest);

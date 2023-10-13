@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import uz.feliza.felizabackend.entity.Customer;
 import uz.feliza.felizabackend.entity.Role;
 import uz.feliza.felizabackend.entity.VerificationToken;
+import uz.feliza.felizabackend.entity.enums.RoleName;
 import uz.feliza.felizabackend.exception.UserAlreadyExistsException;
 import uz.feliza.felizabackend.repository.CustomerRepository;
 import uz.feliza.felizabackend.repository.RoleRepository;
@@ -22,6 +23,7 @@ public class AuthService implements IAuthService{
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final VerificationTokenRepository tokenRepository;
+
     @Override
     public Customer register(RegisterRequest request) {
         Optional<Customer> customer = this.findByEmail(request.getEmail());
@@ -37,10 +39,10 @@ public class AuthService implements IAuthService{
         newCustomer.setBirthDate(request.getBirthDate());
         newCustomer.setPhoneNumber(request.getPhoneNumber());
 
-        Optional<Role> roleAdmin = roleRepository.findByName("ROLE_ADMIN");
+        Optional<Role> roleAdmin = roleRepository.findByRoleName(RoleName.CUSTOMER);
         if (roleAdmin.isEmpty()){
             Role role = new Role();
-            role.setName("ROLE_ADMIN");
+            role.setRoleName(RoleName.CUSTOMER);
             Role savedRole = roleRepository.save(role);
             roleAdmin = Optional.of(savedRole);
         }

@@ -41,7 +41,6 @@ public class Customer extends AbstractLongEntity implements UserDetails {
 //    private LocalDate birthDate;
 
     private Long saleSum; //975 000 50 000
-    //1 000 000
 
     private Date lastSeen;
 
@@ -88,10 +87,4 @@ public class Customer extends AbstractLongEntity implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
-
-//    @ManyToMany
-//    private List<Bonus> bonusList;
-
-//    @ManyToMany
-//    private List<Order> order;
 }
