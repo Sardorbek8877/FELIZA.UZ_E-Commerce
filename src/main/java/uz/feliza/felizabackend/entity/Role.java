@@ -14,7 +14,7 @@ import uz.feliza.felizabackend.entity.template.AbstractLongEntity;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "role")
+@Table(name = "roles")
 public class Role extends AbstractLongEntity implements GrantedAuthority { // implements GrantedAuthority
 
     @Enumerated(value = EnumType.STRING)
