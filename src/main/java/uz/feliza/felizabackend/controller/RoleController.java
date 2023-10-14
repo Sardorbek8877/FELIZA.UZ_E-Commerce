@@ -25,7 +25,7 @@ public class RoleController {
         return ResponseEntity.ok(roles);
     }
 
-    @GetMapping("/addRole")
+    @GetMapping("/addRole")   // test comment for check server
     public String addRole(){
         roleService.getOrCreateRole(RoleName.CUSTOMER);
         roleService.getOrCreateRole(RoleName.ADMIN);
