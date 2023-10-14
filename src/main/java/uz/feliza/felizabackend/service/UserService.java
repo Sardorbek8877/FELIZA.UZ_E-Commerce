@@ -61,4 +61,6 @@ public class UserService implements IUserService {
         userRepository.save(user);
         return  new ApiResponse("Hodim akkounti yaratildi", true, user);
     }
+
+    //changeUsernameAndPassword
 }

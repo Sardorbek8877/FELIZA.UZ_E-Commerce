@@ -107,6 +107,5 @@ public class CouponDetailService {
     @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Tashkent")
     public void inActiveCoupons(){
 
-
     }
 }

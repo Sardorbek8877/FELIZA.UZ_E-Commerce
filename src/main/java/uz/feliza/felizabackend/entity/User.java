@@ -17,7 +17,7 @@ import java.util.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "users1")
+@Entity(name = "users")
 public class User extends AbstractLongEntity implements UserDetails {
 
     @Column(nullable = false)
