@@ -1,6 +1,7 @@
 package uz.feliza.felizabackend.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -9,11 +10,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import uz.feliza.felizabackend.entity.Customer;
 import uz.feliza.felizabackend.entity.VerificationToken;
 import uz.feliza.felizabackend.event.RegistrationCompleteEvent;
+import uz.feliza.felizabackend.exception.UsernameNotFoundException;
 import uz.feliza.felizabackend.payload.AuthResponse;
 import uz.feliza.felizabackend.request.LoginRequest;
 import uz.feliza.felizabackend.request.RegisterRequest;
@@ -26,7 +28,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
     private final AuthService authService;
     private final JwtTokenUtil jwtTokenUtil;
@@ -35,7 +37,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
-    public String registerUser(@RequestBody RegisterRequest registerRequest, final HttpServletRequest httpServletRequest){
+    public String registerUser(@RequestBody @Valid RegisterRequest registerRequest, final HttpServletRequest httpServletRequest){
         Customer customer = authService.register(registerRequest);
         publisher.publishEvent(new RegistrationCompleteEvent(customer,applicationUrl(httpServletRequest)));
         return "Success! Please, check your email to complete your registration";

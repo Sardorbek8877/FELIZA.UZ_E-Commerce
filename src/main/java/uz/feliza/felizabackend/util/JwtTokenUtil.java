@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import uz.feliza.felizabackend.constants.SecurityConstants;
 import uz.feliza.felizabackend.entity.Customer;
-import uz.feliza.felizabackend.entity.User;
 
 import java.security.Key;
 import java.text.ParseException;

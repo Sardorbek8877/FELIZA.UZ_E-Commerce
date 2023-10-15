@@ -7,6 +7,8 @@ import uz.feliza.felizabackend.entity.Customer;
 import uz.feliza.felizabackend.entity.Role;
 import uz.feliza.felizabackend.entity.VerificationToken;
 import uz.feliza.felizabackend.entity.enums.RoleName;
+import uz.feliza.felizabackend.exception.PasswordEmptyException;
+import uz.feliza.felizabackend.exception.PhoneNumberAlreadyExistsException;
 import uz.feliza.felizabackend.exception.UserAlreadyExistsException;
 import uz.feliza.felizabackend.repository.CustomerRepository;
 import uz.feliza.felizabackend.repository.RoleRepository;
@@ -35,8 +37,16 @@ public class AuthService implements IAuthService{
         var newCustomer = new Customer();
         newCustomer.setFullName(request.getFullName());
         newCustomer.setEmail(request.getEmail());
+        if(request.getPassword().isBlank()){
+              throw new PasswordEmptyException("Customer password is empty!");
+        }
         newCustomer.setPassword(passwordEncoder.encode(request.getPassword()));
         newCustomer.setBirthDate(request.getBirthDate());
+
+        Optional<Customer> phoneNumber = customerRepository.findByPhoneNumber(request.getPhoneNumber());
+        if (phoneNumber.isPresent())
+            throw new PhoneNumberAlreadyExistsException(
+                    "Customer with phone number " + request.getPhoneNumber() + " already exists!");
         newCustomer.setPhoneNumber(request.getPhoneNumber());
 
         Optional<Role> roleAdmin = roleRepository.findByRoleName(RoleName.CUSTOMER);

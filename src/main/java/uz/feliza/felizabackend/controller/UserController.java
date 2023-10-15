@@ -11,7 +11,7 @@ import uz.feliza.felizabackend.service.UserService;
 import java.util.List;
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -20,12 +20,12 @@ public class UserController {
         return userService.getUsers();
     }
 
-    @GetMapping("{userId}")
-    public HttpEntity<?> getUserById(@PathVariable Long userId){
-        return ResponseEntity.ok(userService.getUserById(userId));
+    @GetMapping("/{id}")
+    public HttpEntity<?> getUserById(@PathVariable Long id){
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public HttpEntity<?> addUser(@RequestBody UserDto userDto){
         ApiResponse apiResponse = userService.addUser(userDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:409).body(apiResponse);

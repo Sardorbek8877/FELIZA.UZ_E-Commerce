@@ -1,5 +1,6 @@
 package uz.feliza.felizabackend.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -12,14 +13,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/productSizeVariant")
+@RequiredArgsConstructor
 public class ProductSizeVariantController {
-
-
     private final ProductSizeVariantService productSizeVariantService;
-    public ProductSizeVariantController(ProductSizeVariantService productSizeVariantService){
-        this.productSizeVariantService = productSizeVariantService;
-    }
-
     @GetMapping
     public HttpEntity<?> getAllProductSizeVariant(){
         return ResponseEntity.ok(productSizeVariantService.getAllProductSizeVariant());
@@ -30,7 +26,7 @@ public class ProductSizeVariantController {
         return ResponseEntity.ok(productSizeVariantService.getProductSizeVariantById(id));
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/check/{id}")
     public HttpEntity<?> checkProductSizeVariantQuantity(@PathVariable Long id, @RequestBody int quantity){
         return ResponseEntity.ok(productSizeVariantService.checkProductSizeVariantQuantity(id, quantity));
     }

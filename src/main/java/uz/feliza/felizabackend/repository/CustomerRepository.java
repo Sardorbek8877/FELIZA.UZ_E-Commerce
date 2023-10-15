@@ -13,6 +13,8 @@ import java.util.Optional;
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Optional<Customer> findByEmail(String email);
 
+    Optional<Customer> findByPhoneNumber(String phoneNumber);
+
 //    List<Customer> findAllByBirthDate(Month month, int day);
 //    List<Customer> findByBirthDateMonthAndBirthDateDayOfMonth(int month, int day);
     @Query("SELECT c FROM Customer c WHERE MONTH(c.birthDate) = :month AND DAY(c.birthDate) = :day")

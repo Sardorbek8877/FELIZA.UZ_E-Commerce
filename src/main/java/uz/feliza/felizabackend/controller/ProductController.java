@@ -1,5 +1,6 @@
 package uz.feliza.felizabackend.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -24,6 +25,7 @@ public class ProductController {
     }
 
     @GetMapping
+//    @RolesAllowed({"CUSTOMER"})
     public ResponseEntity<?> getAllProducts(){
         List<ProductResponseDto> allProducts = productService.getAllProducts();
         return ResponseEntity.ok(allProducts);
