@@ -40,7 +40,6 @@ public class ProductDto {
     private Long colorId;
 
     private List<Long> compatibleProductIdList;
-    //private List<ProductIdDto> compatibleProductIdList;
 
     private List<ProductSizeVariantDto> productSizeVariantDtoList;
 }
