@@ -2,6 +2,9 @@ package uz.feliza.felizabackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,9 +12,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import uz.feliza.felizabackend.entity.enums.RoleName;
 import uz.feliza.felizabackend.entity.template.AbstractLongEntity;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @EqualsAndHashCode(callSuper = true)
@@ -23,16 +26,21 @@ import java.util.*;
 public class Customer extends AbstractLongEntity implements UserDetails {
 
     @Column(nullable = false)
+    @Size(min = 2, max = 50, message = "ism familiya 2 ta harfdan dan 50 ta harfgacha oraliqda bo'lishi kerak ")
     private String fullName;
 
     @Column(nullable = false, unique = true)
+    @NotBlank(message = "telefon nomer kiriilishi kerak")
     private String phoneNumber;
 
     @Column(length = 50, nullable = false, unique = true)
     @NaturalId(mutable = true)
+    @NotBlank(message = "email address kiritilishi kerak")
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
+    @NotBlank(message = "parol kiritilishi kerak")
+    @NotNull()
     private String password;
 
     @Temporal(TemporalType.DATE)
@@ -62,6 +70,8 @@ public class Customer extends AbstractLongEntity implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
     }
+
+
 
     @Override
     public String getUsername() {

@@ -16,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import uz.feliza.felizabackend.entity.Role;
+import uz.feliza.felizabackend.entity.enums.RoleName;
 import uz.feliza.felizabackend.filter.JwtTokenFilter;
 import uz.feliza.felizabackend.repository.CustomerRepository;
 import uz.feliza.felizabackend.repository.UserRepository;
@@ -59,13 +61,18 @@ public class SecurityConfig {
                 ))
 
                 .authorizeHttpRequests(reg -> reg
-                        .requestMatchers("/api/v1/auth/register/**")
+                        .requestMatchers("/api/auth/register/**")
                         .permitAll()
-                        .requestMatchers("/api/v1/auth/login", "/api/**")
+                        .requestMatchers("/api/auth/login","/api/**")
                         .permitAll()
-                        .requestMatchers("/api/v1/products/add").hasAnyAuthority("ROLE_EDITOR","ROLE_CUSTOMER")
-                        .requestMatchers("/api/v1/users/**").hasAnyAuthority("ROLE_CUSTOMER","ROLE_USER")
-                        .requestMatchers("/api/v1/customers/**").hasAnyAuthority("ROLE_ADMIN","ROLE_SHIPPER")
+                        .requestMatchers("/api/products/add").hasAnyAuthority("EDITOR","ADMIN")
+                        .requestMatchers("/api/products").hasAuthority("CUSTOMER")
+                        .requestMatchers("/api/users/**").hasAnyAuthority("ROLE_CUSTOMER","ROLE_USER")
+                        .requestMatchers("/api/customers").hasRole(RoleName.CUSTOMER.name())
+                        .requestMatchers("/api/categories").hasAnyAuthority(RoleName.CUSTOMER.name())
+                        .requestMatchers("/api/categories/add").hasAuthority(RoleName.ADMIN.name())
+                        .requestMatchers("/api/categories/update").hasAuthority(RoleName.ADMIN.name())
+                        .requestMatchers("/api/categories/delete").hasAuthority(RoleName.ADMIN.name())
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

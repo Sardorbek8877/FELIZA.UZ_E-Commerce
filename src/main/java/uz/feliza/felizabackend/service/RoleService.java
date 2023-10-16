@@ -25,4 +25,13 @@ public class RoleService {
         Optional<Role> roleOptional = roleRepository.findByRoleName(roleName);
         roleOptional.orElseGet(() -> roleRepository.save(new Role(roleName)));
     }
+
+    public boolean delete(Long id){
+        try {
+            roleRepository.deleteById(id);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
 }

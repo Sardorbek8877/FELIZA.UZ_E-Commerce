@@ -12,6 +12,6 @@ import uz.feliza.felizabackend.service.S3Service;
 @RestController
 @RequestMapping("/api/productImages")
 public class ProductImageController {
-
+//bu hozircha bo'lishi kerakmasmi?
 
 }
