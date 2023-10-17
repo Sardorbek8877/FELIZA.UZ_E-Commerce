@@ -39,7 +39,7 @@ public class ProductController {
     }
 
     @PostMapping(value = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public HttpEntity<?> addProduct(@Valid @RequestPart(value = "productDto") ProductDto productDto , @RequestBody MultipartFile[] files){
+    public HttpEntity<?> addProduct(@Valid @RequestPart ProductDto productDto , @RequestBody MultipartFile[] files){
         ApiResponse apiResponse = productService.addProduct(productDto, files);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:409).body(apiResponse);
     }

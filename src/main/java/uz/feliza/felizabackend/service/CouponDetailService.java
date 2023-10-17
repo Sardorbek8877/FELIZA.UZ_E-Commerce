@@ -12,6 +12,7 @@ import uz.feliza.felizabackend.payload.CouponDetailDto;
 import uz.feliza.felizabackend.repository.CouponDetailRepository;
 import uz.feliza.felizabackend.repository.CouponRepository;
 import uz.feliza.felizabackend.repository.CustomerRepository;
+import uz.feliza.felizabackend.sms.ScheduledSmsSend;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,12 +24,15 @@ public class CouponDetailService {
     final private CouponDetailRepository couponDetailRepository;
     final private CustomerRepository customerRepository;
     final private CouponRepository couponRepository;
+    final private ScheduledSmsSend scheduledSmsSend;
     public CouponDetailService(CouponDetailRepository couponDetailRepository,
                                CustomerRepository customerRepository,
-                               CouponRepository couponRepository){
+                               CouponRepository couponRepository,
+                               ScheduledSmsSend scheduledSmsSend){
         this.couponDetailRepository = couponDetailRepository;
         this.customerRepository = customerRepository;
         this.couponRepository = couponRepository;
+        this.scheduledSmsSend = scheduledSmsSend;
     }
 
     public List<CouponDetail> getAllCouponsByCustomerId(Long customerId){
@@ -39,7 +43,7 @@ public class CouponDetailService {
         // Agar list kelishi qiyin bo'lsa, kalit so'zlar bilan listni backendda olamiz
         for (Customer customer : customerList){
             addCouponToCustomer(customer, couponId, day);
-            sendMessageToCustomer(customer, message);
+            scheduledSmsSend.sendMessageToCustomer(customer, message);
         }
         return new ApiResponse("Kuponlar mijozlarga yuborildi!", true);
     }
@@ -72,10 +76,7 @@ public class CouponDetailService {
 //    }
 
     //METHODS FOR AUTOMATIC COUPONS WITH SMS SENDING
-    public List<Customer> getCustomersWithBirthdayToday() {
-        LocalDate today = LocalDate.now();
-        return customerRepository.findByBirthDateMonthAndBirthDateDayOfMonth(today.getMonthValue(), today.getDayOfMonth());
-    }
+
 
     public void addCouponToCustomer(Customer customer, Long couponId, int expireDay) throws ChangeSetPersister.NotFoundException {
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(ChangeSetPersister.NotFoundException::new);
@@ -87,25 +88,5 @@ public class CouponDetailService {
         couponDetailRepository.save(couponDetail);
     }
 
-    public void sendMessageToCustomer(Customer customer, String message) {
-        // Implementiere die Logik zum Versenden der Geburtstagsnachricht
-        // Hier könnten Sie eine E-Mail- oder Benachrichtigungsservice-API verwenden
-        // Beispiel: emailService.sendBirthdayEmail(customer.getEmail(), "Alles Gute zum Geburtstag!");
-    }
 
-    @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Tashkent") // 08:00 da jo'natishi kerak
-    public void sendBirthdayGreetings() throws ChangeSetPersister.NotFoundException {
-        List<Customer> customersWithBirthday = getCustomersWithBirthdayToday();
-        String message = "FELIZA sizni tug'ilgan kuningiz bilan muborakbod etadi va sovg'a sifatida online " +
-                "do'konimizdan harid uchun kupon taqdim etadi. Kupon allaqachon akkountingizga biriktirilgan.";
-        for (Customer customer : customersWithBirthday){
-            addCouponToCustomer(customer, 1L, 10);
-            sendMessageToCustomer(customer, message);
-        }
-    }
-
-    @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Tashkent")
-    public void inActiveCoupons(){
-
-    }
 }

@@ -1,16 +1,15 @@
-package uz.feliza.felizabackend.sms.payload;
+package uz.feliza.felizabackend.sms.oldCode.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Map;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SmsLoginResponse {
+public class SmsMessageSendResponse {
 
+    private String id;
     private String message;
-    private Map<String, String> data;
+    private String status;
 }
