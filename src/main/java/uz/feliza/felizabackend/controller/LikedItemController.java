@@ -25,7 +25,7 @@ public class LikedItemController {
         return ResponseEntity.ok(allByCustomerId);
     }
 
-    @PostMapping
+    @PostMapping("/addLikedItem")
     public HttpEntity<?> addLikedItem(@RequestBody LikedItemDto likedItemDto){
         ApiResponse apiResponse = likedItemService.addLikedItem(likedItemDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:409).body(apiResponse);

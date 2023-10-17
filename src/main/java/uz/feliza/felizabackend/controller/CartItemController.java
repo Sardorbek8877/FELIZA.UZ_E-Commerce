@@ -31,7 +31,7 @@ public class CartItemController {
         return ResponseEntity.ok(cartItemById);
     }
 
-    @PostMapping
+    @PostMapping("/addCartItem")
     public HttpEntity<?> addCartItem(@RequestBody CartItemDto cartItemDto){
         ApiResponse apiResponse = cartItemService.addCartItem(cartItemDto);
         return ResponseEntity.status(apiResponse.isSuccess() ?200:409).body(apiResponse);

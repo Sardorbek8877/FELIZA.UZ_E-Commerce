@@ -56,7 +56,7 @@ public class OrderController {
         return ResponseEntity.ok(byPostSendNumber);
     }
 
-    @PostMapping
+    @PostMapping("/addOrder")
     public HttpEntity<?> addOrder(@RequestBody OrderDto orderDto){
         ApiResponse apiResponse = orderService.addOrder(orderDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200: 409).body(apiResponse);

@@ -28,7 +28,7 @@ public class BrandController {
     }
 
     // Endpoint to retrieve a Brand by its unique identifier (ID).
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public HttpEntity<?> getBrandById(@PathVariable Long id){
         ApiResponse apiResponse = brandService.getBrandById(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:409).body(apiResponse);
@@ -41,14 +41,14 @@ public class BrandController {
     }
 
     // Endpoint to edit the name of an existing Brand by its ID.
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public HttpEntity<?> editBrand(@Valid @PathVariable Long id, @RequestBody Brand brand){
         ApiResponse apiResponse = brandService.editBrand(id, brand);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:404).body(apiResponse);
     }
 
     // Endpoint to delete a Brand by its ID.
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public HttpEntity<?> deleteBrand(@PathVariable Long id){
         ApiResponse apiResponse = brandService.deleteBrand(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:404).body(apiResponse);
