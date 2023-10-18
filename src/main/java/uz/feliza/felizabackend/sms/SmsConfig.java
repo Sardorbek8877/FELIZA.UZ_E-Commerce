@@ -5,16 +5,26 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 public class SmsConfig {
 
     private static final String API_URL = "http://notify.eskiz.uz/api/message/sms/send";
-    private static final String BEARER_TOKEN = "YOUR_API_TOKEN";
+    private static final String BEARER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjUyOTYsInJvbGUiOm51bGwsIm" +
+            "RhdGEiOnsiaWQiOjUyOTYsIm5hbWUiOiJTYXJkb3JiZWsgU2FmYXJvdiIsImVtYWlsIjoic2FyZG9yYmVrc2FmYXJvdjg4NDRAZ21haWwu" +
+            "Y29tIiwicm9sZSI6bnVsbCwiYXBpX3Rva2VuIjpudWxsLCJzdGF0dXMiOiJhY3RpdmUiLCJzbXNfYXBpX2xvZ2luIjoiZXNraXoyIiwic21" +
+            "zX2FwaV9wYXNzd29yZCI6ImUkJGsheiIsInV6X3ByaWNlIjo1MCwidWNlbGxfcHJpY2UiOjExNSwidGVzdF91Y2VsbF9wcmljZSI6bnVsbC" +
+            "wiYmFsYW5jZSI6NTAwMCwiaXNfdmlwIjowLCJob3N0Ijoic2VydmVyMSIsImNyZWF0ZWRfYXQiOiIyMDIzLTEwLTE3VDE3OjMzOjQ4LjAwM" +
+            "DAwMFoiLCJ1cGRhdGVkX2F0IjoiMjAyMy0xMC0xOFQwNDoyNjozOS4wMDAwMDBaIiwid2hpdGVsaXN0IjpudWxsLCJoYXNfcGVyZmVjdHVt" +
+            "IjowLCJiZWVsaW5lX3ByaWNlIjpudWxsfSwiaWF0IjoxNjk3NjE1NTQ1LCJleHAiOjE3MDAyMDc1NDV9.46CXIuPF6Ow0dRzP-s-rCFbLTx" +
+            "L2VLTXbLozEwIvXEk";
 
     public static void main(String[] args) {
         SmsConfig smsSender = new SmsConfig();
-        String phoneNumber = "+998901234567";
+        String phoneNumber = "998900133442";
         String code = smsSender.generateRandomFourDigitNumber();
 
         smsSender.sendSMS(phoneNumber, code);
@@ -28,6 +38,9 @@ public class SmsConfig {
             URL url = new URL(API_URL);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
+            String encodedPhoneNumber = URLEncoder.encode(phoneNumber, StandardCharsets.UTF_8);
+            String encodedCode = URLEncoder.encode(code, StandardCharsets.UTF_8);
+
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Authorization", "Bearer " + BEARER_TOKEN);
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -36,7 +49,7 @@ public class SmsConfig {
             String postData = "mobile_phone=" + phoneNumber
                     + "&message=" + "Tasdiqlash kodi: " + code + " Kodni begona shaxslarga bermang."
                     + "&from=4546"
-                    + "&callback_url=" + "http://your_callback_url_here";
+                    + "&callback_url=" + "http://0000.uz/test.php";
 
             try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
                 wr.writeBytes(postData);
@@ -78,7 +91,7 @@ public class SmsConfig {
             String postData = "mobile_phone=" + phoneNumber
                     + "&message=" + customMessage
                     + "&from=4546"
-                    + "&callback_url=" + "http://your_callback_url_here";
+                    + "&callback_url=" + "http://0000.uz/test.php";
 
             try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
                 wr.writeBytes(postData);

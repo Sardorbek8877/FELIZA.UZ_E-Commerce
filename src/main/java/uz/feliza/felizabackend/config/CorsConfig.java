@@ -13,4 +13,6 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedOrigins("https://feliza-admin.netlify.app")
                 .allowedMethods("GET", "POST", "PUT", "DELETE");
     }
+
+
 }

@@ -1,13 +1,16 @@
 package uz.feliza.felizabackend.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import uz.feliza.felizabackend.entity.Product;
 import uz.feliza.felizabackend.payload.ApiResponse;
 import uz.feliza.felizabackend.payload.ProductDto;
 import uz.feliza.felizabackend.payload.ProductResponseDto;
@@ -38,12 +41,24 @@ public class ProductController {
         return ResponseEntity.ok(productResponse);
     }
 
-    @PostMapping(value = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/add/test", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public HttpEntity<?> addProduct(@Valid @RequestPart ProductDto productDto , @RequestBody MultipartFile[] files){
         ApiResponse apiResponse = productService.addProduct(productDto, files);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:409).body(apiResponse);
     }
 
+    @PostMapping("/add")
+    public ResponseEntity<?> createProduct(@RequestParam("files") MultipartFile[] files, @RequestParam("productDto") String productDto) {
+        try {
+            ProductDto productDto1 = new ObjectMapper().readValue(productDto, ProductDto.class);
+            ApiResponse apiResponse = productService.addProduct(productDto1, files);
+
+            return ResponseEntity.status(apiResponse.isSuccess() ? 200:409).body(apiResponse);
+        } catch (Exception e) {
+            // Handle exceptions and return an error response
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating the product");
+        }
+    }
 //    @PostMapping(value = "/add/test", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 //    public HttpEntity<?> addTestProduct(@Valid @RequestParam("nameUZB") String nameUZB,
 //                                    @Valid @RequestParam("nameRUS") String nameRUS,
