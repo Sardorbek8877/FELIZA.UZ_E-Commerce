@@ -1,5 +1,6 @@
 package uz.feliza.felizabackend.sms;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,6 @@ import uz.feliza.felizabackend.service.CouponDetailService;
 import java.time.LocalDate;
 import java.util.List;
 
-@Service
 public class ScheduledSmsSend {
 
     private final CouponDetailService couponDetailService;

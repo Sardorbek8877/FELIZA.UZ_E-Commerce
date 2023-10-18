@@ -24,29 +24,30 @@ public class CouponDetailService {
     final private CouponDetailRepository couponDetailRepository;
     final private CustomerRepository customerRepository;
     final private CouponRepository couponRepository;
-    final private ScheduledSmsSend scheduledSmsSend;
+//    final private ScheduledSmsSend scheduledSmsSend;
     public CouponDetailService(CouponDetailRepository couponDetailRepository,
                                CustomerRepository customerRepository,
-                               CouponRepository couponRepository,
-                               ScheduledSmsSend scheduledSmsSend){
+                               CouponRepository couponRepository
+//                               ScheduledSmsSend scheduledSmsSend
+    ){
         this.couponDetailRepository = couponDetailRepository;
         this.customerRepository = customerRepository;
         this.couponRepository = couponRepository;
-        this.scheduledSmsSend = scheduledSmsSend;
+//        this.scheduledSmsSend = scheduledSmsSend;
     }
 
     public List<CouponDetail> getAllCouponsByCustomerId(Long customerId){
         return couponDetailRepository.findAllByCustomerId(customerId);
     }
 
-    public ApiResponse assignCouponToAllCustomers(List<Customer> customerList, Long couponId, int day, String message) throws ChangeSetPersister.NotFoundException {
-        // Agar list kelishi qiyin bo'lsa, kalit so'zlar bilan listni backendda olamiz
-        for (Customer customer : customerList){
-            addCouponToCustomer(customer, couponId, day);
-            scheduledSmsSend.sendMessageToCustomer(customer, message);
-        }
-        return new ApiResponse("Kuponlar mijozlarga yuborildi!", true);
-    }
+//    public ApiResponse assignCouponToAllCustomers(List<Customer> customerList, Long couponId, int day, String message) throws ChangeSetPersister.NotFoundException {
+//        // Agar list kelishi qiyin bo'lsa, kalit so'zlar bilan listni backendda olamiz
+//        for (Customer customer : customerList){
+//            addCouponToCustomer(customer, couponId, day);
+//            scheduledSmsSend.sendMessageToCustomer(customer, message);
+//        }
+//        return new ApiResponse("Kuponlar mijozlarga yuborildi!", true);
+//    }
 
     //status o'zgarganda
     public void addCouponIfStatusChanged(Long customerId, Long couponId){
