@@ -41,12 +41,6 @@ public class ProductController {
         return ResponseEntity.ok(productResponse);
     }
 
-    @PostMapping(value = "/add/test", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public HttpEntity<?> addProduct(@Valid @RequestPart ProductDto productDto , @RequestBody MultipartFile[] files){
-        ApiResponse apiResponse = productService.addProduct(productDto, files);
-        return ResponseEntity.status(apiResponse.isSuccess() ? 200:409).body(apiResponse);
-    }
-
     @PostMapping("/add")
     public ResponseEntity<?> createProduct(@RequestParam("files") MultipartFile[] files, @RequestParam("productDto") String productDto) {
         try {
@@ -59,6 +53,13 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating the product");
         }
     }
+
+//    @PostMapping(value = "/add/test", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+//    public HttpEntity<?> addProduct(@Valid @RequestPart ProductDto productDto , @RequestBody MultipartFile[] files){
+//        ApiResponse apiResponse = productService.addProduct(productDto, files);
+//        return ResponseEntity.status(apiResponse.isSuccess() ? 200:409).body(apiResponse);
+//    }
+
 //    @PostMapping(value = "/add/test", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 //    public HttpEntity<?> addTestProduct(@Valid @RequestParam("nameUZB") String nameUZB,
 //                                    @Valid @RequestParam("nameRUS") String nameRUS,

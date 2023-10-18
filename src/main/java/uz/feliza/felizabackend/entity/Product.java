@@ -46,7 +46,7 @@ public class Product extends AbstractLongEntity {
     @ManyToOne
     private Color color;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Product> compatibleProducts;
 
     @JsonIgnore
