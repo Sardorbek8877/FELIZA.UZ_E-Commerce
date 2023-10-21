@@ -22,24 +22,24 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
     private final ColorRepository colorRepository;
-    private final ProductImagesService productImagesService;
     private final S3Service s3Service;
+    private final BillzCRMService billzCRMService;
     public ProductService(ProductRepository productRepository,
                           ProductSizeVariantRepository productSizeVariantRepository,
                           ProductImagesRepository productImagesRepository,
                           CategoryRepository categoryRepository,
                           BrandRepository brandRepository,
                           ColorRepository colorRepository,
-                          ProductImagesService productImagesService,
-                          S3Service s3Service){
+                          S3Service s3Service,
+                          BillzCRMService billzCRMService){
         this.productRepository = productRepository;
         this.productSizeVariantRepository = productSizeVariantRepository;
         this.productImagesRepository = productImagesRepository;
         this.categoryRepository = categoryRepository;
         this.brandRepository = brandRepository;
         this.colorRepository = colorRepository;
-        this.productImagesService = productImagesService;
         this.s3Service = s3Service;
+        this.billzCRMService = billzCRMService;
     }
 
     public List<ProductResponseDto> getAllProducts() {
@@ -198,6 +198,12 @@ public class ProductService {
         product.setProductImages(productImagesList);
 
         productRepository.save(product);
+
+        //SEND REQUEST TO BILLZ API
+        for ( ProductSizeVariant productSV: productSizeVariantList ) {
+            billzCRMService.sendProductToCRM(productSV, product);
+        }
+
         return new ApiResponse("Mahsulot saqlandi!", true, product.getId());
     }
 

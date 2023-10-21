@@ -13,23 +13,23 @@ import java.util.Random;
 public class SmsConfig {
 
     private static final String API_URL = "http://notify.eskiz.uz/api/message/sms/send";
-    private static final String BEARER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjUyOTYsInJvbGUiOm51bGwsIm" +
-            "RhdGEiOnsiaWQiOjUyOTYsIm5hbWUiOiJTYXJkb3JiZWsgU2FmYXJvdiIsImVtYWlsIjoic2FyZG9yYmVrc2FmYXJvdjg4NDRAZ21haWwu" +
-            "Y29tIiwicm9sZSI6bnVsbCwiYXBpX3Rva2VuIjpudWxsLCJzdGF0dXMiOiJhY3RpdmUiLCJzbXNfYXBpX2xvZ2luIjoiZXNraXoyIiwic21" +
-            "zX2FwaV9wYXNzd29yZCI6ImUkJGsheiIsInV6X3ByaWNlIjo1MCwidWNlbGxfcHJpY2UiOjExNSwidGVzdF91Y2VsbF9wcmljZSI6bnVsbC" +
-            "wiYmFsYW5jZSI6NTAwMCwiaXNfdmlwIjowLCJob3N0Ijoic2VydmVyMSIsImNyZWF0ZWRfYXQiOiIyMDIzLTEwLTE3VDE3OjMzOjQ4LjAwM" +
-            "DAwMFoiLCJ1cGRhdGVkX2F0IjoiMjAyMy0xMC0xOFQwNDoyNjozOS4wMDAwMDBaIiwid2hpdGVsaXN0IjpudWxsLCJoYXNfcGVyZmVjdHVt" +
-            "IjowLCJiZWVsaW5lX3ByaWNlIjpudWxsfSwiaWF0IjoxNjk3NjE1NTQ1LCJleHAiOjE3MDAyMDc1NDV9.46CXIuPF6Ow0dRzP-s-rCFbLTx" +
-            "L2VLTXbLozEwIvXEk";
+    private static final String BEARER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjUzMjEsInJvbGUiOm51bGwsIm" +
+            "RhdGEiOnsiaWQiOjUzMjEsIm5hbWUiOiJcIlBJTksgU1RZTEUgRkFTSElPTlwiIG1hc2B1bGl5YXRpIGNoZWtsYW5nYW4gamFtaXlhdGki" +
+            "LCJlbWFpbCI6InJha2htYXRqb25zb2JpdG92ODgyQGdtYWlsLmNvbSIsInJvbGUiOm51bGwsImFwaV90b2tlbiI6bnVsbCwic3RhdHVzIj" +
+            "oiaW5hY3RpdmUiLCJzbXNfYXBpX2xvZ2luIjoiZXNraXoyIiwic21zX2FwaV9wYXNzd29yZCI6ImUkJGsheiIsInV6X3ByaWNlIjo1MCwi" +
+            "dWNlbGxfcHJpY2UiOjExNSwidGVzdF91Y2VsbF9wcmljZSI6bnVsbCwiYmFsYW5jZSI6NTAwMCwiaXNfdmlwIjowLCJob3N0Ijoic2Vydm" +
+            "VyMSIsImNyZWF0ZWRfYXQiOiIyMDIzLTEwLTIwVDEzOjQwOjEwLjAwMDAwMFoiLCJ1cGRhdGVkX2F0IjoiMjAyMy0xMC0yMFQxMzo0MDox" +
+            "MC4wMDAwMDBaIiwid2hpdGVsaXN0IjpudWxsLCJoYXNfcGVyZmVjdHVtIjpudWxsLCJiZWVsaW5lX3ByaWNlIjo1MH0sImlhdCI6MTY5Nz" +
+            "gyNzkwNiwiZXhwIjoxNzAwNDE5OTA2fQ.zxU4w3ytEVaearMN4j_Mast8-giuqQeVT00ANjyHPLc";
 
     public static void main(String[] args) {
         SmsConfig smsSender = new SmsConfig();
-        String phoneNumber = "998900133442";
+        String phoneNumber = "998998682028";
         String code = smsSender.generateRandomFourDigitNumber();
 
         smsSender.sendSMS(phoneNumber, code);
 
-        String message = "SMS API Test qilinmoqda";
+        String message = "SMS API Test qilinmoqda yangi token";
         smsSender.sendCustomSMS(phoneNumber, message);
     }
 
@@ -119,7 +119,6 @@ public class SmsConfig {
             e.printStackTrace();
         }
     }
-
 
     public String generateRandomFourDigitNumber() {
         Random random = new Random();

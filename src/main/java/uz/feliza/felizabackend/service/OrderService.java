@@ -16,24 +16,28 @@ import java.util.Optional;
 @Service
 public class OrderService {
 
-    final private OrderRepository orderRepository;
-    final private CustomerRepository customerRepository;
-    final private AddressRepository addressRepository;
-    final private CartItemRepository cartItemRepository;
-    final private ProductSizeVariantRepository productSizeVariantRepository;
-    final private ProductRepository productRepository;
+    private final OrderRepository orderRepository;
+    private final CustomerRepository customerRepository;
+    private final AddressRepository addressRepository;
+    private final CartItemRepository cartItemRepository;
+    private final ProductSizeVariantRepository productSizeVariantRepository;
+    private final ProductRepository productRepository;
+    private final BillzCRMService billzCRMService;
+
     public OrderService(OrderRepository orderRepository,
                         CustomerRepository customerRepository,
                         AddressRepository addressRepository,
                         CartItemRepository cartItemRepository,
                         ProductSizeVariantRepository productSizeVariantRepository,
-                        ProductRepository productRepository){
+                        ProductRepository productRepository,
+                        BillzCRMService billzCRMService){
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
         this.addressRepository = addressRepository;
         this.cartItemRepository = cartItemRepository;
         this.productSizeVariantRepository = productSizeVariantRepository;
         this.productRepository = productRepository;
+        this.billzCRMService = billzCRMService;
     }
 
     public List<Order> getAllOrders(){
@@ -104,6 +108,9 @@ public class OrderService {
                 address);
         orderRepository.save(order);
 
+        //SEND REQUEST TO BILLZ API FOR CREATE ORDER
+        billzCRMService.sendOrderToCRM(order);
+
         //decrease count of ProductSizeVariant
         for (CartItem cartItem : cartItemList){
             Optional<ProductSizeVariant> optionalProductSizeVariant = productSizeVariantRepository.findById(cartItem.getProductSizeVariant().getId());
@@ -121,9 +128,8 @@ public class OrderService {
 
         //Addition orderCost to Customer saleSum
         customer.setSaleSum(customer.getSaleSum() + orderCost);
-        
-
         customerRepository.save(customer);
+
 
         return new ApiResponse("Buyurtma qabul qilindi", true);
     }
