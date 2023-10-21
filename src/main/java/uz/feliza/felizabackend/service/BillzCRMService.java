@@ -18,12 +18,20 @@ public class BillzCRMService {
         this.restTemplate = restTemplate;
     }
 
-    public void sendProductToCRM(ProductSizeVariant productSizeVariant, Product product) {
-        // Definieren Sie die URL und den Request-Body
-        String crmApiUrl = "https://api.billz.uz/v1/";
+    public void sendRequestToBillz(String requestBody){
+        String apiUrl = "https://api.billz.uz/v1/";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer" + "token");
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        String response = restTemplate.postForObject(apiUrl, requestEntity, String.class);
+
+        System.out.println("API Response: " + response);
+    }
+
+    public void sendProductToCRM(ProductSizeVariant productSizeVariant, Product product) {
 
         String requestBody = "{\"jsonrpc\": \"2.0\",\"method\": \"import.createWithOffice\",\"params\": {\"items\": " +
                 "[{\"id\": \"" + productSizeVariant.getId() + "\",\"sku\": \"8739eb18-0d03-11ea-80d9-000c29f3b2cd\"," +
@@ -31,27 +39,11 @@ public class BillzCRMService {
                 " " + product.getPrice() + ",\"details\": [{\"officeID\": 1115,\"quantity\": " + productSizeVariant.getQuantity() +
                 "}]}]},\"id\": \"1200\"}";
 
-
-        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
-
-        // Senden Sie den POST-Request an die CRM-System-API
-        ResponseEntity<String> response = restTemplate.postForEntity(crmApiUrl, requestEntity, String.class);
-
-        // Verarbeiten Sie die API-Antwort, z.B. prüfen Sie den Statuscode und die Antwortdaten.
-        if (response.getStatusCode().is2xxSuccessful()) {
-            String responseBody = response.getBody();
-            System.out.println("Billz API ga mahsulot muvaffaqiyatli qo'shildi");
-        } else {
-            System.out.println("Billz API ga so'rov yuborishda xatolik!");
-        }
+        sendRequestToBillz(requestBody);
     }
 
     public void sendOrderToCRM(Order order){
-        String apiUrl = "https://api.billz.uz/v1/";
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Bearer" + "token");
         String requestBody = "{\n" +
                 "    \"jsonrpc\": \"2.0\",\n" +
                 "    \"method\": \"orders.create\",\n" +
@@ -72,11 +64,24 @@ public class BillzCRMService {
                 "    }\n" +
                 "}";
 
-        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
+        sendRequestToBillz(requestBody);
+    }
 
-        String response = restTemplate.postForObject(apiUrl, requestEntity, String.class);
+    public void getClientDataFromCRM() {
 
-        System.out.println("API Response: " + response);
+        String requestBody = "{\n" +
+                "    \"jsonrpc\": \"2.0\",\n" +
+                "    \"method\": \"client.get\",\n" +
+                "    \"params\": {\n" +
+                "        \"clientId\": 116673,\n" +
+                "        \"beginDate\": \"2021-05-01T18:19:25Z\",\n" +
+                "        \"endDate\": \"2021-05-20T18:19:25Z\",\n" +
+                "        \"lastUpdateDate\": \"2021-05-01T18:19:25Z\"\n" +
+                "    },\n" +
+                "    \"id\": \"1\"\n" +
+                "}";
+
+        sendRequestToBillz(requestBody);
     }
 
     @Bean
