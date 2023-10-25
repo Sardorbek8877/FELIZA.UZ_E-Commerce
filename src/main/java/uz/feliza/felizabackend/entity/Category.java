@@ -16,5 +16,8 @@ import uz.feliza.felizabackend.entity.template.AbstractLongEntity;
 public class Category extends AbstractLongEntity {
 
     @Column(nullable = false, unique = true)
-    private String name;
+    private String nameUZB;
+
+    @Column(nullable = false, unique = true)
+    private String nameRUS;
 }

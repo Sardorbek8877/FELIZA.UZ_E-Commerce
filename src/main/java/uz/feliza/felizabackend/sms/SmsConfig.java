@@ -14,24 +14,24 @@ public class SmsConfig {
 
     private static final String API_URL = "http://notify.eskiz.uz/api/message/sms/send";
     private static final String BEARER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjUzMjEsInJvbGUiOm51bGwsIm" +
-            "RhdGEiOnsiaWQiOjUzMjEsIm5hbWUiOiJcIlBJTksgU1RZTEUgRkFTSElPTlwiIG1hc2B1bGl5YXRpIGNoZWtsYW5nYW4gamFtaXlhdGki" +
-            "LCJlbWFpbCI6InJha2htYXRqb25zb2JpdG92ODgyQGdtYWlsLmNvbSIsInJvbGUiOm51bGwsImFwaV90b2tlbiI6bnVsbCwic3RhdHVzIj" +
-            "oiaW5hY3RpdmUiLCJzbXNfYXBpX2xvZ2luIjoiZXNraXoyIiwic21zX2FwaV9wYXNzd29yZCI6ImUkJGsheiIsInV6X3ByaWNlIjo1MCwi" +
-            "dWNlbGxfcHJpY2UiOjExNSwidGVzdF91Y2VsbF9wcmljZSI6bnVsbCwiYmFsYW5jZSI6NTAwMCwiaXNfdmlwIjowLCJob3N0Ijoic2Vydm" +
-            "VyMSIsImNyZWF0ZWRfYXQiOiIyMDIzLTEwLTIwVDEzOjQwOjEwLjAwMDAwMFoiLCJ1cGRhdGVkX2F0IjoiMjAyMy0xMC0yMFQxMzo0MDox" +
-            "MC4wMDAwMDBaIiwid2hpdGVsaXN0IjpudWxsLCJoYXNfcGVyZmVjdHVtIjpudWxsLCJiZWVsaW5lX3ByaWNlIjo1MH0sImlhdCI6MTY5Nz" +
-            "gyNzkwNiwiZXhwIjoxNzAwNDE5OTA2fQ.zxU4w3ytEVaearMN4j_Mast8-giuqQeVT00ANjyHPLc";
+            "RhdGEiOnsiaWQiOjUzMjEsIm5hbWUiOiJPT08gUElOSyBTVFlMRSBGQVNISU9OIiwiZW1haWwiOiJyYWtobWF0am9uc29iaXRvdjg4MkBn" +
+            "bWFpbC5jb20iLCJyb2xlIjpudWxsLCJhcGlfdG9rZW4iOm51bGwsInN0YXR1cyI6ImluZGVidGVkIiwic21zX2FwaV9sb2dpbiI6ImVza2" +
+            "l6MiIsInNtc19hcGlfcGFzc3dvcmQiOiJlJCRrIXoiLCJ1el9wcmljZSI6NTAsInVjZWxsX3ByaWNlIjoxMTUsInRlc3RfdWNlbGxfcHJp" +
+            "Y2UiOm51bGwsImJhbGFuY2UiOi00MDY2NjAsImlzX3ZpcCI6MCwiaG9zdCI6InNlcnZlcjEiLCJjcmVhdGVkX2F0IjoiMjAyMy0xMC0yMF" +
+            "QxMzo0MDoxMC4wMDAwMDBaIiwidXBkYXRlZF9hdCI6IjIwMjMtMTAtMjNUMTU6NDg6MTAuMDAwMDAwWiIsIndoaXRlbGlzdCI6bnVsbCwi" +
+            "aGFzX3BlcmZlY3R1bSI6MCwiYmVlbGluZV9wcmljZSI6bnVsbH0sImlhdCI6MTY5ODI1NTQ1OSwiZXhwIjoxNzAwODQ3NDU5fQ.2K9JaXu" +
+            "Z1v0c369odlfJFhmYYMt0D4RetMFxrecSyaM";
 
-    public static void main(String[] args) {
-        SmsConfig smsSender = new SmsConfig();
-        String phoneNumber = "998998682028";
-        String code = smsSender.generateRandomFourDigitNumber();
-
-        smsSender.sendSMS(phoneNumber, code);
-
-        String message = "SMS API Test qilinmoqda yangi token";
-        smsSender.sendCustomSMS(phoneNumber, message);
-    }
+//    public static void main(String[] args) {
+//        SmsConfig smsSender = new SmsConfig();
+//        String phoneNumber = "998998682028";
+//        String code = smsSender.generateRandomFourDigitNumber();
+//
+//        smsSender.sendSMS(phoneNumber, code);
+//
+//        String message = "SMS API Test qilinmoqda yangi token";
+//        smsSender.sendCustomSMS(phoneNumber, message);
+//    }
 
     public void sendSMS(String phoneNumber, String code) {
         try {

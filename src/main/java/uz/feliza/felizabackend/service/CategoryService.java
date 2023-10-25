@@ -35,11 +35,12 @@ public class CategoryService {
 
     // Method to add a new category if a category with the same name doesn't already exist.
     public ApiResponse addCategory(Category category){
-        if (categoryRepository.existsByName(category.getName()))
+        if (categoryRepository.existsByNameUZB(category.getNameUZB())
+                || categoryRepository.existsByNameRUS(category.getNameRUS()))
             return new ApiResponse("Bunday kategoriya mavjud!", false);
 
         // Create and save a new category.
-        Category category1 = new Category(category.getName());
+        Category category1 = new Category(category.getNameUZB(), category.getNameRUS());
 
         categoryRepository.save(category1);
         return new ApiResponse("Kategoriya yaratildi", true);
@@ -53,7 +54,13 @@ public class CategoryService {
         if (optionalCategory.isEmpty())
             return new ApiResponse("Kategoriya topilmadi", false);
         Category editingCategory = optionalCategory.get();
-        editingCategory.setName(category.getName());
+
+        if (categoryRepository.existsByNameUZB(category.getNameUZB())
+                || categoryRepository.existsByNameRUS(category.getNameRUS()))
+            return new ApiResponse("Bunday kategoriya mavjud!", false);
+
+        editingCategory.setNameUZB(category.getNameUZB());
+        editingCategory.setNameRUS(category.getNameRUS());
         categoryRepository.save(editingCategory);
         return new ApiResponse("Kategoriya o'zgartirildi", true);
     }

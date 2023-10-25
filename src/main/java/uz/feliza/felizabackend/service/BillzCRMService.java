@@ -8,7 +8,6 @@ import org.springframework.web.client.RestTemplate;
 import uz.feliza.felizabackend.entity.Order;
 import uz.feliza.felizabackend.entity.Product;
 import uz.feliza.felizabackend.entity.ProductSizeVariant;
-import uz.feliza.felizabackend.payload.ProductSizeVariantDto;
 
 @Service
 public class BillzCRMService {
@@ -82,10 +81,5 @@ public class BillzCRMService {
                 "}";
 
         sendRequestToBillz(requestBody);
-    }
-
-    @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder.build();
     }
 }

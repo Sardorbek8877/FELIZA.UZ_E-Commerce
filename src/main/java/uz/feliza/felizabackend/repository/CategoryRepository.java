@@ -6,5 +6,6 @@ import uz.feliza.felizabackend.entity.Category;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    boolean existsByName(String name);
+    boolean existsByNameUZB(String nameUZB);
+    boolean existsByNameRUS(String nameRUS);
 }
