@@ -40,6 +40,8 @@ public class Order extends AbstractLongEntity {
 
     private String shippingStatus;
 
+    //private boolean cancelled = false;
+
     private int deliveryDays;
 
     private LocalDate deliveryDate;
