@@ -28,8 +28,8 @@ public class Product extends AbstractLongEntity {
 
     private String descriptionRUS;
 
-    @Column(nullable = false, unique = true)
-    private String referenceNumber;//ref-1001
+    @Column(nullable = false)
+    private String referenceNumber;
 
     @Column(nullable = false)
     private Long importPrice;
