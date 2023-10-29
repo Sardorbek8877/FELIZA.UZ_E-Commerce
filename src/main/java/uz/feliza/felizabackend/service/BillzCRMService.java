@@ -35,7 +35,7 @@ public class BillzCRMService {
         String requestBody = "{\"jsonrpc\": \"2.0\",\"method\": \"import.createWithOffice\",\"params\": {\"items\": " +
                 "[{\"id\": \"" + productSizeVariant.getId() + "\",\"sku\": \"8739eb18-0d03-11ea-80d9-000c29f3b2cd\"," +
                 "\"category\": \"" + product.getCategory() + "\",\"name\": \"" + product.getNameUZB() + "\",\"price\":" +
-                " " + product.getPrice() + ",\"details\": [{\"officeID\": 1115,\"quantity\": " + productSizeVariant.getQuantity() +
+                " " + product.getSellPrice() + ",\"details\": [{\"officeID\": 1115,\"quantity\": " + productSizeVariant.getQuantity() +
                 "}]}]},\"id\": \"1200\"}";
 
         sendRequestToBillz(requestBody);

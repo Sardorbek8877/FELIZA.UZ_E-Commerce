@@ -26,7 +26,10 @@ public class ProductDto {
     private String referenceNumber;
 
     @NotNull
-    private Long price;
+    private Long importPrice;
+
+    @NotNull
+    private Long sellPrice;
 
     @Max(value = 99, message = "Chegirma miqdori 100 dan ko'p bo'lmasligi kerak!")
     private Integer sale = 0;
@@ -39,7 +42,7 @@ public class ProductDto {
     @NotNull
     private Long colorId;
 
-    private List<Long> compatibleProductIdList;
+    private Long compatibleProductsId;
 
     private List<ProductSizeVariantDto> productSizeVariantDtoList;
 }
