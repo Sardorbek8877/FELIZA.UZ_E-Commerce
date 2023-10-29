@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import uz.feliza.felizabackend.entity.Brand;
 import uz.feliza.felizabackend.entity.Category;
 import uz.feliza.felizabackend.payload.ApiResponse;
+import uz.feliza.felizabackend.payload.CategoryDto;
 import uz.feliza.felizabackend.service.BrandService;
 import uz.feliza.felizabackend.service.CategoryService;
 
@@ -62,8 +63,8 @@ public class CategoryController {
      */
     @PostMapping("/add")
     @RolesAllowed({"ADMIN"})
-    public HttpEntity<?> addCategory( @RequestBody Category category){
-        ApiResponse apiResponse = categoryService.addCategory(category);
+    public HttpEntity<?> addCategory( @RequestBody CategoryDto categoryDto){
+        ApiResponse apiResponse = categoryService.addCategory(categoryDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:404).body(apiResponse);
     }
 
@@ -77,8 +78,8 @@ public class CategoryController {
      */
     @PutMapping("/update/{id}")
     @RolesAllowed({"ADMIN"})
-    public HttpEntity<?> editCategory(@PathVariable Long id, @RequestBody Category category){
-        ApiResponse apiResponse = categoryService.editCategory(id, category);
+    public HttpEntity<?> editCategory(@PathVariable Long id, @RequestBody CategoryDto categoryDto){
+        ApiResponse apiResponse = categoryService.editCategory(id, categoryDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:404).body(apiResponse);
     }
 

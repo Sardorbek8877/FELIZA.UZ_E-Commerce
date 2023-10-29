@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import uz.feliza.felizabackend.entity.Brand;
 import uz.feliza.felizabackend.entity.Category;
 import uz.feliza.felizabackend.payload.ApiResponse;
+import uz.feliza.felizabackend.payload.CategoryDto;
 import uz.feliza.felizabackend.repository.BrandRepository;
 import uz.feliza.felizabackend.repository.CategoryRepository;
 
@@ -34,20 +35,37 @@ public class CategoryService {
     }
 
     // Method to add a new category if a category with the same name doesn't already exist.
-    public ApiResponse addCategory(Category category){
-        if (categoryRepository.existsByNameUZB(category.getNameUZB())
-                || categoryRepository.existsByNameRUS(category.getNameRUS()))
+    public ApiResponse addCategory(CategoryDto categoryDto){
+
+        if (categoryRepository.existsByNameUZB(categoryDto.getNameUZB())
+                || categoryRepository.existsByNameRUS(categoryDto.getNameRUS()))
             return new ApiResponse("Bunday kategoriya mavjud!", false);
 
-        // Create and save a new category.
-        Category category1 = new Category(category.getNameUZB(), category.getNameRUS());
+        //Create new Category
+        Category newCategory = new Category();
 
-        categoryRepository.save(category1);
+        if (categoryDto.getParentCategoryId() != null){
+            Category parentCategory;
+            Optional<Category> optionalCategory = categoryRepository.findById(categoryDto.getParentCategoryId());
+            if (optionalCategory.isEmpty())
+                return new ApiResponse("Kategoriya topilmadi", false);
+            parentCategory = optionalCategory.get();
+            newCategory.setNameUZB(categoryDto.getNameUZB());
+            newCategory.setNameRUS(categoryDto.getNameRUS());
+            newCategory.setParentCategory(parentCategory);
+        }
+        else {
+            newCategory.setNameUZB(categoryDto.getNameUZB());
+            newCategory.setNameRUS(categoryDto.getNameRUS());
+            newCategory.setParentCategory(null);
+        }
+
+        categoryRepository.save(newCategory);
         return new ApiResponse("Kategoriya yaratildi", true);
     }
 
     // Method to edit the name of an existing category by its ID.
-    public ApiResponse editCategory(Long id, Category category){
+    public ApiResponse editCategory(Long id, CategoryDto categoryDto){
         Optional<Category> optionalCategory = categoryRepository.findById(id);
 
         // Check if a category with the given ID exists.
@@ -55,12 +73,21 @@ public class CategoryService {
             return new ApiResponse("Kategoriya topilmadi", false);
         Category editingCategory = optionalCategory.get();
 
-        if (categoryRepository.existsByNameUZB(category.getNameUZB())
-                || categoryRepository.existsByNameRUS(category.getNameRUS()))
+        if (categoryRepository.existsByNameUZB(categoryDto.getNameUZB())
+                || categoryRepository.existsByNameRUS(categoryDto.getNameRUS()))
             return new ApiResponse("Bunday kategoriya mavjud!", false);
 
-        editingCategory.setNameUZB(category.getNameUZB());
-        editingCategory.setNameRUS(category.getNameRUS());
+        Category parentCategory = new Category();
+        if (categoryDto.getParentCategoryId() != null){
+            Optional<Category> optionalParentCategory = categoryRepository.findById(categoryDto.getParentCategoryId());
+            if (optionalParentCategory.isEmpty())
+                return new ApiResponse("Kategoriya topilmadi", false);
+            parentCategory = optionalCategory.get();
+        }
+
+        editingCategory.setNameUZB(categoryDto.getNameUZB());
+        editingCategory.setNameRUS(categoryDto.getNameRUS());
+        editingCategory.setParentCategory(parentCategory);
         categoryRepository.save(editingCategory);
         return new ApiResponse("Kategoriya o'zgartirildi", true);
     }

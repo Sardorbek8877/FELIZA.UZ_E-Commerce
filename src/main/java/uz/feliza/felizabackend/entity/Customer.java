@@ -48,8 +48,6 @@ public class Customer extends AbstractLongEntity implements UserDetails {
 //    @Column(nullable = false)
 //    private LocalDate birthDate;
 
-    private Long saleSum; //975 000 50 000
-
     private Date lastSeen;
 
     @ManyToOne

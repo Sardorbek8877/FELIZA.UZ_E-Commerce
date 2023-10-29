@@ -83,7 +83,7 @@ public class OrderService {
             ProductSizeVariant productSizeVariant = optionalProductSizeVariant.get();
             Optional<Product> optionalProduct = productRepository.findById(productSizeVariant.getProduct().getId());
             if (optionalProduct.isEmpty())
-                return new ApiResponse("Mahsu;ot topilmadi", false);
+                return new ApiResponse("Mahsulot topilmadi", false);
             Product product = optionalProduct.get();
             orderCost += product.getPrice() * cartItem.getQuantity();
         }
