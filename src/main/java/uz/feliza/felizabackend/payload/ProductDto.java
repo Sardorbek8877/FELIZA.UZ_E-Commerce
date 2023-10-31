@@ -2,12 +2,16 @@ package uz.feliza.felizabackend.payload;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductDto {
 
     @NotNull
@@ -42,7 +46,24 @@ public class ProductDto {
     @NotNull
     private Long colorId;
 
-    private Long compatibleProductsId;
+    private List<Long> compatibleProductsId;
 
     private List<ProductSizeVariantDto> productSizeVariantDtoList;
+
+    public ProductDto(String nameUZB, String nameRUS, String descriptionUZB, String descriptionRUS,
+                      String referenceNumber, Long importPrice, Long sellPrice, Integer sale, Long brandId,
+                      List<Long> categoryId, Long colorId, List<ProductSizeVariantDto> productSizeVariantDtoList) {
+        this.nameUZB = nameUZB;
+        this.nameRUS = nameRUS;
+        this.descriptionUZB = descriptionUZB;
+        this.descriptionRUS = descriptionRUS;
+        this.referenceNumber = referenceNumber;
+        this.importPrice = importPrice;
+        this.sellPrice = sellPrice;
+        this.sale = sale;
+        this.brandId = brandId;
+        this.categoryId = categoryId;
+        this.colorId = colorId;
+        this.productSizeVariantDtoList = productSizeVariantDtoList;
+    }
 }

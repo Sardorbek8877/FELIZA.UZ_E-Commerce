@@ -12,6 +12,8 @@ public class ProductResponseDto {
 
     private Product product;
 
+    private List<Long> compatibleProductsIdList;
+
     private List<ProductSizeVariant> productSizeVariantList;
 
     private List<ProductImages> productImagesList;

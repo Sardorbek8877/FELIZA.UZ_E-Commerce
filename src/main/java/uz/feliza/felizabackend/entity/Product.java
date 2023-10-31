@@ -49,8 +49,9 @@ public class Product extends AbstractLongEntity {
     @ManyToOne
     private Color color;
 
-//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Long compatibleProducts;
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Product> compatibleProducts;
 
     @JsonIgnore
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -78,7 +79,7 @@ public class Product extends AbstractLongEntity {
 
     public Product(String nameUZB, String nameRUS, String descriptionUZB, String descriptionRUS,
                    String referenceNumber, Long importPrice, Long sellPrice, Integer sale, Brand brand, List<Category> category,
-                   Color color, Long compatibleProducts) {
+                   Color color, List<Product> compatibleProducts) {
         this.nameUZB = nameUZB;
         this.nameRUS = nameRUS;
         this.descriptionUZB = descriptionUZB;

@@ -22,7 +22,6 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
     private final ColorRepository colorRepository;
-    private final CompatibleProductsService compatibleProductsService;
     private final S3Service s3Service;
     private final BillzCRMService billzCRMService;
     public ProductService(ProductRepository productRepository,
@@ -32,8 +31,7 @@ public class ProductService {
                           BrandRepository brandRepository,
                           ColorRepository colorRepository,
                           S3Service s3Service,
-                          BillzCRMService billzCRMService,
-                          CompatibleProductsService compatibleProductsService){
+                          BillzCRMService billzCRMService){
         this.productRepository = productRepository;
         this.productSizeVariantRepository = productSizeVariantRepository;
         this.productImagesRepository = productImagesRepository;
@@ -42,7 +40,6 @@ public class ProductService {
         this.colorRepository = colorRepository;
         this.s3Service = s3Service;
         this.billzCRMService = billzCRMService;
-        this.compatibleProductsService = compatibleProductsService;
     }
 
     public List<ProductResponseDto> getAllProducts() {
@@ -54,10 +51,10 @@ public class ProductService {
             ProductResponseDto productResponseDto = new ProductResponseDto();
 
             // FIND ALL COMPATIBLE PRODUCTS AND ADD IDS TO LIST
-//            List<Long> compatibleProductsIdList = new ArrayList<>();
-//            for (Product compatibleProduct : product.getCompatibleProducts()){
-//                compatibleProductsIdList.add(compatibleProduct.getId());
-//            }
+            List<Long> compatibleProductsIdList = new ArrayList<>();
+            for (Product compatibleProduct : product.getCompatibleProducts()){
+                compatibleProductsIdList.add(compatibleProduct.getId());
+            }
 
             //FIND ALL PRODUCT SIZE VARIANTS
             List<ProductSizeVariant> allByProductId = productSizeVariantRepository.findAllByProductId(product.getId());
@@ -69,6 +66,7 @@ public class ProductService {
             productResponseDto.setProduct(product);
             productResponseDto.setProductSizeVariantList(allByProductId);
             productResponseDto.setProductImagesList(allProductImagesById);
+            productResponseDto.setCompatibleProductsIdList(compatibleProductsIdList);
 
             productResponseDtoList.add(productResponseDto);
         }
@@ -83,11 +81,11 @@ public class ProductService {
 
         ProductResponseDto productResponseDto = new ProductResponseDto();
 
-//        // FIND ALL COMPATIBLE PRODUCTS AND ADD IDS TO LIST
-//        List<Long> compatibleProductsIdList = new ArrayList<>();
-//        for (Product compatibleProduct : product.getCompatibleProducts()){
-//            compatibleProductsIdList.add(compatibleProduct.getId());
-//        }
+        // FIND ALL COMPATIBLE PRODUCTS AND ADD IDS TO LIST
+        List<Long> compatibleProductsIdList = new ArrayList<>();
+        for (Product compatibleProduct : product.getCompatibleProducts()){
+            compatibleProductsIdList.add(compatibleProduct.getId());
+        }
 
         //FIND ALL PRODUCT SIZE VARIANTS
         List<ProductSizeVariant> allByProductId = productSizeVariantRepository.findAllByProductId(product.getId());
@@ -99,14 +97,12 @@ public class ProductService {
         productResponseDto.setProduct(product);
         productResponseDto.setProductSizeVariantList(allByProductId);
         productResponseDto.setProductImagesList(allProductImagesById);
+        productResponseDto.setCompatibleProductsIdList(compatibleProductsIdList);
 
         return productResponseDto;
     }
 
     public ApiResponse addProduct(ProductDto productDto, MultipartFile[] files){
-
-        if (productRepository.existsByReferenceNumber(productDto.getReferenceNumber()))
-            return new ApiResponse("Bunday Reference raqamli mahsulot allaqachon mavjud!", false);
 
         Product product = new Product();
 
@@ -131,21 +127,21 @@ public class ProductService {
             return new ApiResponse("Bunday rang topilmadi!", false);
         Color color = optionalColor.get();
 
-////        CREATE COMPATIBLE PRODUCTS LIST AND ADD PRODUCT
-//        List<Product> compatibleProductList = new ArrayList<>();
-//        if (!productDto.getCompatibleProductIdList().isEmpty()){
-//            for (Long compatibleProductId : productDto.getCompatibleProductIdList()) {
-//                Optional<Product> optionalProduct = productRepository.findById(compatibleProductId);
-//
-//                if (optionalProduct.isEmpty()){
-//                    System.out.println("Bunday mahsulot topilmadi");
-//                }
-//                else {
-//                    Product compatibleProduct = optionalProduct.get();
-//                    compatibleProductList.add(compatibleProduct);
-//                }
-//            }
-//        }
+//        CREATE COMPATIBLE PRODUCTS LIST AND ADD PRODUCT
+        List<Product> compatibleProductsIdList = new ArrayList<>();
+        if (!productDto.getCompatibleProductsId().isEmpty()){
+            for (Long compatibleProductId : productDto.getCompatibleProductsId()) {
+                Optional<Product> optionalProduct = productRepository.findById(compatibleProductId);
+
+                if (optionalProduct.isEmpty()){
+                    System.out.println("Bunday mahsulot topilmadi");
+                }
+                else {
+                    Product compatibleProduct = optionalProduct.get();
+                    compatibleProductsIdList.add(compatibleProduct);
+                }
+            }
+        }
 
 //        CREATE LIST<PRODUCTSIZEVARIANT>
         List<ProductSizeVariant> productSizeVariantList = new ArrayList<>();
@@ -195,14 +191,11 @@ public class ProductService {
         product.setBrand(brand);
         product.setCategory(categoryList);
         product.setColor(color);
-        product.setCompatibleProducts(productDto.getCompatibleProductsId());
+        product.setCompatibleProducts(compatibleProductsIdList);
         product.setProductImages(productImagesList);
         product.setProductSizeVariantList(productSizeVariantList);
 
         productRepository.save(product);
-
-//        add Product to CompatibleProductList
-        compatibleProductsService.updateCompatibleProductList(productDto.getCompatibleProductsId(), product.getId());
 
         //SEND REQUEST TO BILLZ API
 //        for ( ProductSizeVariant productSV: productSizeVariantList ) {
