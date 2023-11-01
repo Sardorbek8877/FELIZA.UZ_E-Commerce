@@ -28,11 +28,14 @@ public class Product extends AbstractLongEntity {
 
     private String descriptionRUS;
 
-    @Column(nullable = false, unique = true)
-    private String referenceNumber;//ref-1001
+    @Column(nullable = false)
+    private String referenceNumber;
 
     @Column(nullable = false)
-    private Long price;
+    private Long importPrice;
+
+    @Column(nullable = false)
+    private Long sellPrice;
 
     @Max(value = 99, message = "Chegirma miqdori 100% dan ko'p bo'lmasligi kerak!")
     private Integer sale = 0;
@@ -46,7 +49,8 @@ public class Product extends AbstractLongEntity {
     @ManyToOne
     private Color color;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Product> compatibleProducts;
 
     @JsonIgnore
@@ -58,14 +62,15 @@ public class Product extends AbstractLongEntity {
     private List<ProductSizeVariant> productSizeVariantList;
 
     public Product(String nameUZB, String nameRUS, String descriptionUZB, String descriptionRUS,
-                   String referenceNumber, Long price, Integer sale, Brand brand, List<Category> category,
+                   String referenceNumber, Long importPrice, Long sellPrice, Integer sale, Brand brand, List<Category> category,
                    Color color) {
         this.nameUZB = nameUZB;
         this.nameRUS = nameRUS;
         this.descriptionUZB = descriptionUZB;
         this.descriptionRUS = descriptionRUS;
         this.referenceNumber = referenceNumber;
-        this.price = price;
+        this.importPrice = importPrice;
+        this.sellPrice = sellPrice;
         this.sale = sale;
         this.brand = brand;
         this.category = category;
@@ -73,14 +78,15 @@ public class Product extends AbstractLongEntity {
     }
 
     public Product(String nameUZB, String nameRUS, String descriptionUZB, String descriptionRUS,
-                   String referenceNumber, Long price, Integer sale, Brand brand, List<Category> category,
+                   String referenceNumber, Long importPrice, Long sellPrice, Integer sale, Brand brand, List<Category> category,
                    Color color, List<Product> compatibleProducts) {
         this.nameUZB = nameUZB;
         this.nameRUS = nameRUS;
         this.descriptionUZB = descriptionUZB;
         this.descriptionRUS = descriptionRUS;
         this.referenceNumber = referenceNumber;
-        this.price = price;
+        this.importPrice = importPrice;
+        this.sellPrice = sellPrice;
         this.sale = sale;
         this.brand = brand;
         this.category = category;

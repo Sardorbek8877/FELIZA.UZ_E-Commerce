@@ -41,11 +41,11 @@ public class ProductController {
         return ResponseEntity.ok(productResponse);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<?> createProduct(@RequestParam("files") MultipartFile[] files, @RequestParam("productDto") String productDto) {
+    @PostMapping(value = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> createProduct(@RequestParam MultipartFile[] files, @RequestParam("productDto") String productDto) {
         try {
-            ProductDto productDto1 = new ObjectMapper().readValue(productDto, ProductDto.class);
-            ApiResponse apiResponse = productService.addProduct(productDto1, files);
+            ProductDto productDtoJSON = new ObjectMapper().readValue(productDto, ProductDto.class);
+            ApiResponse apiResponse = productService.addProduct(productDtoJSON, files);
 
             return ResponseEntity.status(apiResponse.isSuccess() ? 200:409).body(apiResponse);
         } catch (Exception e) {

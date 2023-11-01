@@ -85,7 +85,7 @@ public class OrderService {
             if (optionalProduct.isEmpty())
                 return new ApiResponse("Mahsulot topilmadi", false);
             Product product = optionalProduct.get();
-            orderCost += product.getPrice() * cartItem.getQuantity();
+            orderCost += product.getSellPrice() * cartItem.getQuantity();
         }
 
         Optional<Address> optionalAddress = addressRepository.findById(orderDto.getAddressId());
