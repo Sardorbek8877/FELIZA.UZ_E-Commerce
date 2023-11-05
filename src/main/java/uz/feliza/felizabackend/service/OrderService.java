@@ -105,7 +105,7 @@ public class OrderService {
                 orderDto.getShippingStatus(),
                 orderDto.getDeliveryDays(),
                 LocalDate.now().plusDays(orderDto.getDeliveryDays()),
-                address);
+                address,false);
         orderRepository.save(order);
 
         //SEND REQUEST TO BILLZ API FOR CREATE ORDER
