@@ -1,5 +1,5 @@
 package uz.feliza.felizabackend.constants;
 
 public class SecurityConstants {
-    public static final long JWT_EXPIRATION = 70000 * 1000;
+    public static final long JWT_EXPIRATION = 70000 * 100;
 }

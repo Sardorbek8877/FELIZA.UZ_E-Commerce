@@ -27,6 +27,40 @@ public class AuthService implements IAuthService{
     private final VerificationTokenRepository tokenRepository;
 
     @Override
+    public Customer registerAdmin(RegisterRequest request) {
+        Optional<Customer> customer = this.findByEmail(request.getEmail());
+        if (customer.isPresent()){
+            throw new UserAlreadyExistsException(
+                    "Admin with email " + request.getEmail() + " already exists!");
+        }
+
+        var newAdmin = new Customer();
+        newAdmin.setFullName(request.getFullName());
+        newAdmin.setEmail(request.getEmail());
+        if(request.getPassword().isBlank()){
+            throw new PasswordEmptyException("Admin password is empty!");
+        }
+        newAdmin.setPassword(passwordEncoder.encode(request.getPassword()));
+        newAdmin.setBirthDate(request.getBirthDate());
+
+        Optional<Customer> phoneNumber = customerRepository.findByPhoneNumber(request.getPhoneNumber());
+        if (phoneNumber.isPresent())
+            throw new PhoneNumberAlreadyExistsException(
+                    "Admin with phone number " + request.getPhoneNumber() + " already exists!");
+        newAdmin.setPhoneNumber(request.getPhoneNumber());
+
+        Optional<Role> roleAdmin = roleRepository.findByRoleName(RoleName.ADMIN);
+        if (roleAdmin.isEmpty()){
+            Role role = new Role();
+            role.setRoleName(RoleName.ADMIN);
+            Role savedRole = roleRepository.save(role);
+            roleAdmin = Optional.of(savedRole);
+        }
+        newAdmin.setRoles(Collections.singleton(roleAdmin.get()));
+        return customerRepository.save(newAdmin);
+    }
+
+    @Override
     public Customer register(RegisterRequest request) {
         Optional<Customer> customer = this.findByEmail(request.getEmail());
         if (customer.isPresent()){
@@ -49,14 +83,14 @@ public class AuthService implements IAuthService{
                     "Customer with phone number " + request.getPhoneNumber() + " already exists!");
         newCustomer.setPhoneNumber(request.getPhoneNumber());
 
-        Optional<Role> roleAdmin = roleRepository.findByRoleName(RoleName.CUSTOMER);
-        if (roleAdmin.isEmpty()){
+        Optional<Role> roleCustomer = roleRepository.findByRoleName(RoleName.CUSTOMER);
+        if (roleCustomer.isEmpty()){
             Role role = new Role();
             role.setRoleName(RoleName.CUSTOMER);
             Role savedRole = roleRepository.save(role);
-            roleAdmin = Optional.of(savedRole);
+            roleCustomer = Optional.of(savedRole);
         }
-        newCustomer.setRoles(Collections.singleton(roleAdmin.get()));
+        newCustomer.setRoles(Collections.singleton(roleCustomer.get()));
         return customerRepository.save(newCustomer);
     }
 

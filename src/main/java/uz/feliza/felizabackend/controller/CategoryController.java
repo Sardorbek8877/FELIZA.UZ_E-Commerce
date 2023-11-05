@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.feliza.felizabackend.entity.Brand;
 import uz.feliza.felizabackend.entity.Category;
+import uz.feliza.felizabackend.entity.enums.RoleName;
 import uz.feliza.felizabackend.payload.ApiResponse;
 import uz.feliza.felizabackend.payload.CategoryDto;
 import uz.feliza.felizabackend.service.BrandService;
@@ -20,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
+//@PreAuthorize("hasRole('ADMIN')")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -62,7 +64,8 @@ public class CategoryController {
      * @return
      */
     @PostMapping("/add")
-    @RolesAllowed({"ADMIN"})
+    @RolesAllowed(RoleName.Fields.ADMIN)
+//    @PreAuthorize("hasAuthority('admin:create')")
     public HttpEntity<?> addCategory( @RequestBody CategoryDto categoryDto){
         ApiResponse apiResponse = categoryService.addCategory(categoryDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:404).body(apiResponse);
