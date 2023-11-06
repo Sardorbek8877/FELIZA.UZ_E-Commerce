@@ -4,10 +4,11 @@ import com.googlecode.jsonrpc4j.JsonRpcError;
 import com.googlecode.jsonrpc4j.JsonRpcErrors;
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.googlecode.jsonrpc4j.JsonRpcService;
+import uz.feliza.felizabackend.entity.enums.OrderCancelReason;
 import uz.feliza.felizabackend.entity.merchant_api.Account;
-import uz.feliza.felizabackend.entity.merchant_api.result.CheckPerformTransactionResult;
-import uz.feliza.felizabackend.entity.merchant_api.result.CreateTransactionResult;
+import uz.feliza.felizabackend.entity.merchant_api.result.*;
 import uz.feliza.felizabackend.exception.OrderNotExistsException;
+import uz.feliza.felizabackend.exception.TransactionNotFoundException;
 import uz.feliza.felizabackend.exception.UnableCompleteException;
 import uz.feliza.felizabackend.exception.WrongAmountException;
 
@@ -34,4 +35,30 @@ public interface IMerchantService {
     CheckPerformTransactionResult checkPerformTransaction(@JsonRpcParam(value = "amount") Double amount,
 
                                                           @JsonRpcParam(value = "account") Account account) throws WrongAmountException;
+
+    @JsonRpcErrors({
+            @JsonRpcError(exception = TransactionNotFoundException.class,
+            code = -31003,message = "Order transaction not found", data = "transaction")
+    })
+    CheckTransactionResult checkTransaction(@JsonRpcParam(value = "id") String id);
+
+    @JsonRpcErrors({
+            @JsonRpcError(exception = UnableCompleteException.class,
+                    code = -31008, message = "Unable to complete operation", data = "transaction"),
+
+            @JsonRpcError(exception = TransactionNotFoundException.class,
+                    code = -31003,message = "Order transaction not found", data = "transaction")
+    })
+    PerformTransactionResult performTransaction(@JsonRpcParam(value = "id") String id);
+
+    @JsonRpcErrors({
+            @JsonRpcError(exception = UnableCompleteException.class,
+                    code = -31007, message = "Unable to complete operation", data = "transaction"),
+
+            @JsonRpcError(exception = TransactionNotFoundException.class,
+                    code = -31003,message = "Order transaction not found", data = "transaction")
+    })
+    CancelTransactionResult cancelTransaction(@JsonRpcParam(value = "id") String id, @JsonRpcParam(value = "reason") OrderCancelReason reason);
+
+
 }

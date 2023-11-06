@@ -7,12 +7,17 @@ public enum OrderCancelReason {
     TRANSACTION_TIMEOUT(4),
     MONEY_BACK(5),
     UNKNOWN_ERROR(10);
-    private final int cancelReason;
-    OrderCancelReason(int cancelReason){
-        this.cancelReason = cancelReason;
+    private int code;
+
+    OrderCancelReason(int code) {
+        this.code = code;
     }
 
-    int getCancelReason(){
-        return cancelReason;
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 }
