@@ -6,6 +6,7 @@ import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.googlecode.jsonrpc4j.JsonRpcService;
 import uz.feliza.felizabackend.entity.enums.OrderCancelReason;
 import uz.feliza.felizabackend.entity.merchant_api.Account;
+import uz.feliza.felizabackend.entity.merchant_api.Transaction;
 import uz.feliza.felizabackend.entity.merchant_api.result.*;
 import uz.feliza.felizabackend.exception.OrderNotExistsException;
 import uz.feliza.felizabackend.exception.TransactionNotFoundException;
@@ -60,5 +61,7 @@ public interface IMerchantService {
     })
     CancelTransactionResult cancelTransaction(@JsonRpcParam(value = "id") String id, @JsonRpcParam(value = "reason") OrderCancelReason reason);
 
+    Transaction getStatement(@JsonRpcParam(value = "from") Date from, @JsonRpcParam(value = "to") Date to);
+    ChangePasswordResult changePassword(@JsonRpcParam(value = "password") String password);
 
 }

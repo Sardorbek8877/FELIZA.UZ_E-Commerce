@@ -7,6 +7,10 @@ public class Account {
         return order;
     }
 
+    public Account(Long order) {
+        this.order = order;
+    }
+
     public void setOrder(Long order) {
         this.order = order;
     }

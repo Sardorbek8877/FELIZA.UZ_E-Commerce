@@ -8,6 +8,7 @@ import uz.feliza.felizabackend.entity.OrderTransaction;
 import uz.feliza.felizabackend.entity.enums.OrderCancelReason;
 import uz.feliza.felizabackend.entity.enums.TransactionState;
 import uz.feliza.felizabackend.entity.merchant_api.Account;
+import uz.feliza.felizabackend.entity.merchant_api.Transaction;
 import uz.feliza.felizabackend.entity.merchant_api.result.*;
 import uz.feliza.felizabackend.exception.OrderNotExistsException;
 import uz.feliza.felizabackend.exception.TransactionNotFoundException;
@@ -17,9 +18,7 @@ import uz.feliza.felizabackend.repository.OrderRepository;
 import uz.feliza.felizabackend.repository.TransactionRepository;
 import uz.feliza.felizabackend.service.IMerchantService;
 
-import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AutoJsonRpcServiceImpl
@@ -167,5 +166,29 @@ public class MerchantService implements IMerchantService {
                     existTransaction.getState().getCode());
         }else
             throw new TransactionNotFoundException();
+    }
+
+    @Override
+    public Transaction getStatement(Date from, Date to) {
+        var results = new ArrayList<GetStatementResult>();
+        var transactions = transactionRepository.findByPaymentTimeAndState(from, to, TransactionState.DONE);
+        transactions.forEach(it -> results.add(new GetStatementResult(it.getPaymentId(),
+                it.getPaymentTime(),
+                it.getOrder().getOrderCost(),
+                new Account(it.getOrder().getId()),
+                it.getCreatedTime(),
+                it.getPerformTime(),
+                it.getCancelTime(),
+                it.getId(),
+                it.getState().getCode(),
+                it.getCancelReason().getCode())));
+
+        return new Transaction(results);
+    }
+
+    @Override
+    public ChangePasswordResult changePassword(String password) {
+        //todo: need to change auth password for paycom
+        return new ChangePasswordResult(true);
     }
 }
