@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface IAuthService {
     Customer register(RegisterRequest request);
+    Customer registerAdmin(RegisterRequest request);
     Optional<Customer> findByEmail(String email);
     void saveCustomerVerificationToken(Customer theUser, String verificationToken);
     String validateToken(String theToken);

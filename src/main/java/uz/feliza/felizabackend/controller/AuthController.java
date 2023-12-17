@@ -36,6 +36,12 @@ public class AuthController {
     private final VerificationTokenRepository tokenRepository;
     private final AuthenticationManager authenticationManager;
 
+    @PostMapping("/register/admin")
+    public String registerAdmin(@RequestBody @Valid RegisterRequest registerRequest, final HttpServletRequest httpServletRequest){
+        Customer customer = authService.registerAdmin(registerRequest);
+        publisher.publishEvent(new RegistrationCompleteEvent(customer,applicationUrl(httpServletRequest)));
+        return "Success! Please, check your email to complete your registration";
+    }
     @PostMapping("/register")
     public String registerUser(@RequestBody @Valid RegisterRequest registerRequest, final HttpServletRequest httpServletRequest){
         Customer customer = authService.register(registerRequest);
@@ -65,6 +71,17 @@ public class AuthController {
     }
     @GetMapping("/register/verifyEmail")
     public String verifyEmail(@RequestParam("token") String token){
+        VerificationToken theToken = tokenRepository.findByToken(token);
+        if (theToken.getCustomer().isEnabled())
+            return "This account has already been verified. Please login!";
+        String verificationResult = authService.validateToken(token);
+        if (verificationResult.equalsIgnoreCase("valid"))
+            return "Email verified successfully. Now you can login to your account";
+        return "Invalid verification token";
+    }
+
+    @GetMapping("/register/admin/verifyEmail")
+    public String verifyEmailAdmin(@RequestParam("token") String token){
         VerificationToken theToken = tokenRepository.findByToken(token);
         if (theToken.getCustomer().isEnabled())
             return "This account has already been verified. Please login!";

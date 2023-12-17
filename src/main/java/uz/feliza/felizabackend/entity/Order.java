@@ -33,7 +33,7 @@ public class Order extends AbstractLongEntity {
 
     private String paymentMethod;
 
-    private Long orderCost;
+    private Double orderCost;
 
     @Enumerated(value = EnumType.STRING)
     private OrderStatusType orderStatusType; //buyurtma berildi, jo'natildi, yetib bordi, bekor qilindi editOrderStatus()
@@ -48,4 +48,6 @@ public class Order extends AbstractLongEntity {
 
     @ManyToOne
     private Address address;
+
+    private Boolean delivered;
 }

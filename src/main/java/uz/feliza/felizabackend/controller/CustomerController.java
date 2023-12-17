@@ -17,11 +17,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers")
+@PreAuthorize("hasRole('CUSTOMER')")
 @RequiredArgsConstructor
 public class CustomerController {
     private final CustomerService customerService;
     @GetMapping
-    @RolesAllowed({"CUSTOMER"})
+//    @RolesAllowed({"ADMIN"})
+    @PreAuthorize("hasAuthority('customer:read')")
     public ResponseEntity<?> getCustomers(){
         List<Customer> customers = customerService.getCustomers();
         if (customers.isEmpty())

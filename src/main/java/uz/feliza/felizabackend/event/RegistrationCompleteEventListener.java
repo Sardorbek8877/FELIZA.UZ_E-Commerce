@@ -9,9 +9,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import uz.feliza.felizabackend.entity.Customer;
+import uz.feliza.felizabackend.entity.Role;
 import uz.feliza.felizabackend.entity.User;
+import uz.feliza.felizabackend.entity.enums.RoleName;
 import uz.feliza.felizabackend.service.AuthService;
 import java.io.UnsupportedEncodingException;
+import java.util.Objects;
 import java.util.UUID;
 @Slf4j
 @Component
@@ -33,15 +36,18 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
         authService.saveCustomerVerificationToken(customer, verificationToken);
 
         //4. build the verification url to be sent to the user
-        String url = event.getApplicationUrl() + "/api/auth/register/verifyEmail?token=" + verificationToken;
+        String urlCustomer = event.getApplicationUrl() + "/api/auth/register/verifyEmail?token=" + verificationToken;
+        String urlAdmin = event.getApplicationUrl() + "/api/auth/register/admin/verifyEmail?token=" + verificationToken;
 
         //5. send the email to the user
         try {
-            sendVerificationEmail(url);
+            sendVerificationEmail(urlCustomer);
+            sendVerificationEmail(urlAdmin);
         } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
-        log.info("Click the link to verify your registration: {}", url);
+        log.info("Click the link to verify your registration (CUSTOMER): {}", urlCustomer);
+        log.info("Click the link to verify your registration (ADMIN): {}", urlAdmin);
     }
 
     public void sendVerificationEmail(String url) throws MessagingException, UnsupportedEncodingException {
