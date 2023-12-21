@@ -5,6 +5,7 @@ import uz.feliza.felizabackend.entity.Category;
 import uz.feliza.felizabackend.payload.ApiResponse;
 import uz.feliza.felizabackend.repository.CategoryRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +29,28 @@ public class CategoryService {
         // Check if a category with the given ID exists and return an appropriate response.
         return optionalCategory.map(category -> new ApiResponse(id + " IDli kategoriya: ", true, category))
                 .orElseGet(() -> new ApiResponse("Kategoriya topilmadi", false));
+    }
+
+    public List<Category> getParentCategories(){
+        List<Category> parentCategories = new ArrayList<>();
+        List<Category> categoryList = categoryRepository.findAll();
+        for (Category category : categoryList){
+            if (category.getParentCategoryUZ().isEmpty() && category.getParentCategoryRU().isEmpty()){
+                parentCategories.add(category);
+            }
+        }
+        return parentCategories;
+    }
+
+    public List<Category> getSubCategories(){
+        List<Category> subCategories = new ArrayList<>();
+        List<Category> categoryList = categoryRepository.findAll();
+        for (Category category : categoryList){
+            if (!category.getParentCategoryUZ().isEmpty() && !category.getParentCategoryRU().isEmpty()){
+                subCategories.add(category);
+            }
+        }
+        return subCategories;
     }
 
     // Method to add a new category if a category with the same name doesn't already exist.

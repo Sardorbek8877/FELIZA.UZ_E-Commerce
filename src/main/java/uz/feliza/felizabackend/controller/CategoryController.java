@@ -49,6 +49,18 @@ public class CategoryController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:409).body(apiResponse);
     }
 
+    @GetMapping("/getParentCategories")
+    public HttpEntity<?> getParentCategories(){
+        List<Category> parentCategories = categoryService.getParentCategories();
+        return ResponseEntity.ok(parentCategories);
+    }
+
+    @GetMapping("/getSubCategories")
+    public HttpEntity<?> getSubCategories(){
+        List<Category> subCategories = categoryService.getSubCategories();
+        return ResponseEntity.ok(subCategories);
+    }
+
     // Endpoint to add a new category.
 
     /**
