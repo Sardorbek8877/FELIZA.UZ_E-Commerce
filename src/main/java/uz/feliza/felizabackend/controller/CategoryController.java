@@ -61,6 +61,12 @@ public class CategoryController {
         return ResponseEntity.ok(subCategories);
     }
 
+    @GetMapping("/getSubCategoriesByParent")
+    public HttpEntity<?> getSubCategoriesByParent(@RequestBody String parentCategoryName){
+        List<Category> subCategories = categoryService.getSubCategoriesByParent(parentCategoryName);
+        return ResponseEntity.ok(subCategories);
+    }
+
     // Endpoint to add a new category.
 
     /**

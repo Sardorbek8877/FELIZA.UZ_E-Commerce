@@ -53,6 +53,11 @@ public class CategoryService {
         return subCategories;
     }
 
+    public List<Category> getSubCategoriesByParent(String parentCategoryName){
+        List<Category> categoriesByParentCategory = categoryRepository.findCategoriesByParentCategoryUZ(parentCategoryName);
+        return categoriesByParentCategory;
+    }
+
     // Method to add a new category if a category with the same name doesn't already exist.
     public ApiResponse addCategory(Category category){
 
