@@ -22,6 +22,7 @@ public class Category extends AbstractLongEntity {
     @Column(nullable = false, unique = true)
     private String nameRUS;
 
-    @ManyToOne
-    private Category parentCategory;
+    private String parentCategoryUZ;
+
+    private String parentCategoryRU;
 }

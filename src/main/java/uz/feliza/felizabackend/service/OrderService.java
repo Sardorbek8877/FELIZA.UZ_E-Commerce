@@ -66,7 +66,7 @@ public class OrderService {
             return new ApiResponse("Mijoz topilmadi", false);
         Customer customer = optionalCustomer.get();
 
-        Long orderCost = 0L;
+        Double orderCost = (double) 0;
         List<CartItem> cartItemList = new ArrayList<>();
         for (Long cartItemId : orderDto.getCartItemIdList()){
             Optional<CartItem> optionalCartItem = cartItemRepository.findById(cartItemId);
@@ -127,7 +127,7 @@ public class OrderService {
         }
 
         //Addition orderCost to Customer saleSum
-        customer.setSaleSum(customer.getSaleSum() + orderCost);
+        customer.setSaleSum((long) (customer.getSaleSum() + orderCost));
         customerRepository.save(customer);
 
 

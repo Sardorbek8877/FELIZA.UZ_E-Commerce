@@ -1,19 +1,13 @@
 package uz.feliza.felizabackend.controller;
 
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import uz.feliza.felizabackend.entity.Brand;
 import uz.feliza.felizabackend.entity.Category;
 import uz.feliza.felizabackend.entity.enums.RoleName;
 import uz.feliza.felizabackend.payload.ApiResponse;
-import uz.feliza.felizabackend.payload.CategoryDto;
-import uz.feliza.felizabackend.service.BrandService;
 import uz.feliza.felizabackend.service.CategoryService;
 
 import java.util.List;
@@ -66,8 +60,8 @@ public class CategoryController {
     @PostMapping("/add")
     @RolesAllowed(RoleName.Fields.ADMIN)
 //    @PreAuthorize("hasAuthority('admin:create')")
-    public HttpEntity<?> addCategory( @RequestBody CategoryDto categoryDto){
-        ApiResponse apiResponse = categoryService.addCategory(categoryDto);
+    public HttpEntity<?> addCategory( @RequestBody Category category){
+        ApiResponse apiResponse = categoryService.addCategory(category);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:404).body(apiResponse);
     }
 
@@ -81,8 +75,8 @@ public class CategoryController {
      */
     @PutMapping("/update/{id}")
     @RolesAllowed({"ADMIN"})
-    public HttpEntity<?> editCategory(@PathVariable Long id, @RequestBody CategoryDto categoryDto){
-        ApiResponse apiResponse = categoryService.editCategory(id, categoryDto);
+    public HttpEntity<?> editCategory(@PathVariable Long id, @RequestBody Category category){
+        ApiResponse apiResponse = categoryService.editCategory(id, category);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200:404).body(apiResponse);
     }
 
