@@ -46,24 +46,7 @@ public class ProductDto {
     @NotNull
     private Long colorId;
 
-    private List<Long> compatibleProductsId;
+//    private List<Long> compatibleProductsId;
 
     private List<ProductSizeVariantDto> productSizeVariantDtoList;
-
-    public ProductDto(String nameUZB, String nameRUS, String descriptionUZB, String descriptionRUS,
-                      String referenceNumber, Long importPrice, Long sellPrice, Integer sale, Long brandId,
-                      List<Long> categoryId, Long colorId, List<ProductSizeVariantDto> productSizeVariantDtoList) {
-        this.nameUZB = nameUZB;
-        this.nameRUS = nameRUS;
-        this.descriptionUZB = descriptionUZB;
-        this.descriptionRUS = descriptionRUS;
-        this.referenceNumber = referenceNumber;
-        this.importPrice = importPrice;
-        this.sellPrice = sellPrice;
-        this.sale = sale;
-        this.brandId = brandId;
-        this.categoryId = categoryId;
-        this.colorId = colorId;
-        this.productSizeVariantDtoList = productSizeVariantDtoList;
-    }
 }

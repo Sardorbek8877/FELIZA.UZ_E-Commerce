@@ -128,20 +128,20 @@ public class ProductService {
         Color color = optionalColor.get();
 
 //        CREATE COMPATIBLE PRODUCTS LIST AND ADD PRODUCT
-        List<Product> compatibleProductsIdList = new ArrayList<>();
-        if (!productDto.getCompatibleProductsId().isEmpty()){
-            for (Long compatibleProductId : productDto.getCompatibleProductsId()) {
-                Optional<Product> optionalProduct = productRepository.findById(compatibleProductId);
-
-                if (optionalProduct.isEmpty()){
-                    System.out.println("Bunday mahsulot topilmadi");
-                }
-                else {
-                    Product compatibleProduct = optionalProduct.get();
-                    compatibleProductsIdList.add(compatibleProduct);
-                }
-            }
-        }
+//        List<Product> compatibleProductsIdList = new ArrayList<>();
+//        if (!productDto.getCompatibleProductsId().isEmpty()){
+//            for (Long compatibleProductId : productDto.getCompatibleProductsId()) {
+//                Optional<Product> optionalProduct = productRepository.findById(compatibleProductId);
+//
+//                if (optionalProduct.isEmpty()){
+//                    System.out.println("Bunday mahsulot topilmadi");
+//                }
+//                else {
+//                    Product compatibleProduct = optionalProduct.get();
+//                    compatibleProductsIdList.add(compatibleProduct);
+//                }
+//            }
+//        }
 
 //        CREATE LIST<PRODUCTSIZEVARIANT>
         List<ProductSizeVariant> productSizeVariantList = new ArrayList<>();
@@ -191,7 +191,7 @@ public class ProductService {
         product.setBrand(brand);
         product.setCategory(categoryList);
         product.setColor(color);
-        product.setCompatibleProducts(compatibleProductsIdList);
+//        product.setCompatibleProducts(compatibleProductsIdList);
         product.setProductImages(productImagesList);
         product.setProductSizeVariantList(productSizeVariantList);
 

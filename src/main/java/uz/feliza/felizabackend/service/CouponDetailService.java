@@ -1,22 +1,16 @@
 package uz.feliza.felizabackend.service;
 
-import jakarta.persistence.PreUpdate;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import uz.feliza.felizabackend.entity.Coupon;
 import uz.feliza.felizabackend.entity.CouponDetail;
 import uz.feliza.felizabackend.entity.Customer;
-import uz.feliza.felizabackend.payload.ApiResponse;
-import uz.feliza.felizabackend.payload.CouponDetailDto;
 import uz.feliza.felizabackend.repository.CouponDetailRepository;
 import uz.feliza.felizabackend.repository.CouponRepository;
 import uz.feliza.felizabackend.repository.CustomerRepository;
-import uz.feliza.felizabackend.sms.ScheduledSmsSend;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CouponDetailService {
