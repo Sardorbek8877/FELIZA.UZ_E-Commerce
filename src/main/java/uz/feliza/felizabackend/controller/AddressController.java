@@ -18,25 +18,27 @@ import java.util.List;
 public class AddressController {
 
     private final AddressService addressService;
-    public AddressController(AddressService addressService){
+
+    public AddressController(AddressService addressService) {
         this.addressService = addressService;
     }
 
     @GetMapping
-    public HttpEntity<?> getAddresses(){
-        List<Address> addresses = addressService.getAddresses();
+    public ResponseEntity<List<Address>> getAddresses() {
+        List<Address> addresses = addressService.getAllAddresses();
         return ResponseEntity.ok(addresses);
     }
 
     @GetMapping("/{id}")
-    public HttpEntity<?> getAddressByCustomerId(@PathVariable Long id){
+    public ResponseEntity<List<Address>> getAddressByCustomerId(@PathVariable Long id) {
         List<Address> addressesByUserId = addressService.getAddressesByUserId(id);
         return ResponseEntity.ok(addressesByUserId);
     }
 
     @PostMapping("/addAddress")
-    public HttpEntity<?> addAddress(@Valid @RequestBody AddressDto addressDto){
+    public ResponseEntity<ApiResponse> addAddress(@Valid @RequestBody AddressDto addressDto) {
         ApiResponse apiResponse = addressService.addAddress(addressDto);
-        return ResponseEntity.status(apiResponse.isSuccess() ? HttpStatus.ACCEPTED : HttpStatus.CONFLICT).body(apiResponse);
+        HttpStatus httpStatus = apiResponse.isSuccess() ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
+        return ResponseEntity.status(httpStatus).body(apiResponse);
     }
 }

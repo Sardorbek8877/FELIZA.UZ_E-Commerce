@@ -2,6 +2,7 @@ package uz.feliza.felizabackend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import uz.feliza.felizabackend.entity.Address;
 import uz.feliza.felizabackend.entity.Customer;
@@ -24,20 +25,22 @@ public class AddressService {
         this.customerRepository = customerRepository;
     }
 
-    public List<Address> getAddresses(){
+    @Transactional(readOnly = true)
+    public List<Address> getAllAddresses(){
         return addressRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<Address> getAddressesByUserId( Long customerId){
         return addressRepository.findByCustomerId(customerId);}
 
+    @Transactional(readOnly = true)
     public ApiResponse addAddress(AddressDto addressDto){
         Optional<Customer> optionalCustomer = customerRepository.findById(addressDto.getCustomerId());
         if (optionalCustomer.isEmpty())
             return new ApiResponse("Haridor topilmadi", false);
 
         Address address = new Address();
-
         address.setCustomer(optionalCustomer.get());
         address.setRegion(addressDto.getRegion());
         address.setStreet(addressDto.getStreet());

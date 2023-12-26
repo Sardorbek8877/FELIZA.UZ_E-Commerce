@@ -21,7 +21,6 @@ public class ProductSizeVariant extends AbstractLongEntity {
     @Column(nullable = false)
     private int quantity; // 12
 
-    @Column(nullable = false)
     private String size; // M
 
     @JsonIgnore
