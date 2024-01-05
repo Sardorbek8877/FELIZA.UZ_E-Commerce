@@ -18,7 +18,7 @@ public class Constants {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String birthdayWishForCustomer;
+    private String constantName;
 
-
+    private String constantValue;
 }
