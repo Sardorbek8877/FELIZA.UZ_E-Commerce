@@ -1,4 +1,4 @@
-package uz.feliza.felizabackend.sms;
+package uz.feliza.felizabackend.sms.smsTemplate;
 
 public enum SmsTemplateName {
     BIRTHDAY_WISH,

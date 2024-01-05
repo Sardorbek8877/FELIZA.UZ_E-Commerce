@@ -4,11 +4,16 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import uz.feliza.felizabackend.entity.Customer;
+import uz.feliza.felizabackend.payload.ApiResponse;
 import uz.feliza.felizabackend.repository.CustomerRepository;
 import uz.feliza.felizabackend.service.CouponDetailService;
+import uz.feliza.felizabackend.sms.smsTemplate.SmsTemplate;
+import uz.feliza.felizabackend.sms.smsTemplate.SmsTemplateName;
+import uz.feliza.felizabackend.sms.smsTemplate.SmsTemplateRepository;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -43,25 +48,30 @@ public class SendSmsService {
             "aGFzX3BlcmZlY3R1bSI6MCwiYmVlbGluZV9wcmljZSI6bnVsbH0sImlhdCI6MTY5ODI1NTQ1OSwiZXhwIjoxNzAwODQ3NDU5fQ.2K9JaXu" +
             "Z1v0c369odlfJFhmYYMt0D4RetMFxrecSyaM";
 
+    private HttpURLConnection getHttpURLConnection(String phoneNumber, String customMessage) throws IOException {
+        URL url = new URL(API_URL);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Authorization", "Bearer " + BEARER_TOKEN);
+        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        connection.setDoOutput(true);
+
+        String postData = "mobile_phone=" + phoneNumber
+                + "&message=" + customMessage
+                + "&from=4546"
+                + "&callback_url=" + "http://0000.uz/test.php";
+
+        try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
+            wr.writeBytes(postData);
+            wr.flush();
+        }
+        return connection;
+    }
+
     public void sendSmsToCustomer(String phoneNumber, String customMessage) {
         try {
-            URL url = new URL(API_URL);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Authorization", "Bearer " + BEARER_TOKEN);
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setDoOutput(true);
-
-            String postData = "mobile_phone=" + phoneNumber
-                    + "&message=" + customMessage
-                    + "&from=4546"
-                    + "&callback_url=" + "http://0000.uz/test.php";
-
-            try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
-                wr.writeBytes(postData);
-                wr.flush();
-            }
+            HttpURLConnection connection = getHttpURLConnection(phoneNumber, customMessage);
 
             int responseCode = connection.getResponseCode();
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -85,50 +95,59 @@ public class SendSmsService {
         }
     }
 
-    public void sendSMSWithVerifyCode(String phoneNumber, String code) {
-        try {
-            URL url = new URL(API_URL);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    public ApiResponse sendSmsToCustomerGroup(SmsRequestDto smsRequestDto){
+        SmsTemplate bySmsName = smsRepository.findBySmsName(smsRequestDto.getSmsTemplateName());
 
-            String encodedPhoneNumber = URLEncoder.encode(phoneNumber, StandardCharsets.UTF_8);
-            String encodedCode = URLEncoder.encode(code, StandardCharsets.UTF_8);
-
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Authorization", "Bearer " + BEARER_TOKEN);
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setDoOutput(true);
-
-            String postData = "mobile_phone=" + phoneNumber
-                    + "&message=" + "Tasdiqlash kodi: " + code + " Kodni begona shaxslarga bermang."
-                    + "&from=4546"
-                    + "&callback_url=" + "http://0000.uz/test.php";
-
-            try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
-                wr.writeBytes(postData);
-                wr.flush();
-            }
-
-            int responseCode = connection.getResponseCode();
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String inputLine;
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            if (responseCode == 200) {
-                System.out.println("SMS sent successfully.");
-            } else {
-                System.out.println("Failed to send SMS. Status code: " + responseCode);
-                System.out.println("Response content: " + response);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (Customer customerItem : smsRequestDto.getCustomerList()){
+            sendSmsToCustomer(customerItem.getPhoneNumber(), bySmsName.getText());
         }
+        return new ApiResponse("SMS mijozlarga yuborildi", true);
     }
+
+//    public void sendSMSWithVerifyCode(String phoneNumber, String code) {
+//        try {
+//            URL url = new URL(API_URL);
+//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//
+//            String encodedPhoneNumber = URLEncoder.encode(phoneNumber, StandardCharsets.UTF_8);
+//            String encodedCode = URLEncoder.encode(code, StandardCharsets.UTF_8);
+//
+//            connection.setRequestMethod("POST");
+//            connection.setRequestProperty("Authorization", "Bearer " + BEARER_TOKEN);
+//            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+//            connection.setDoOutput(true);
+//
+//            String postData = "mobile_phone=" + phoneNumber
+//                    + "&message=" + "Tasdiqlash kodi: " + code + " Kodni begona shaxslarga bermang."
+//                    + "&from=4546"
+//                    + "&callback_url=" + "http://0000.uz/test.php";
+//
+//            try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
+//                wr.writeBytes(postData);
+//                wr.flush();
+//            }
+//
+//            int responseCode = connection.getResponseCode();
+//            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//            StringBuilder response = new StringBuilder();
+//            String inputLine;
+//
+//            while ((inputLine = in.readLine()) != null) {
+//                response.append(inputLine);
+//            }
+//            in.close();
+//
+//            if (responseCode == 200) {
+//                System.out.println("SMS sent successfully.");
+//            } else {
+//                System.out.println("Failed to send SMS. Status code: " + responseCode);
+//                System.out.println("Response content: " + response);
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public String generateRandomFourDigitNumber() {
         Random random = new Random();

@@ -1,4 +1,4 @@
-package uz.feliza.felizabackend.sms;
+package uz.feliza.felizabackend.sms.smsTemplate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

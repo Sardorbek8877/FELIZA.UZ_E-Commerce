@@ -1,4 +1,4 @@
-package uz.feliza.felizabackend.sms;
+package uz.feliza.felizabackend.sms.smsTemplate;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

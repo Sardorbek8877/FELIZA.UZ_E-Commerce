@@ -1,4 +1,4 @@
-package uz.feliza.felizabackend.sms;
+package uz.feliza.felizabackend.sms.smsTemplate;
 
 import org.springframework.stereotype.Service;
 import uz.feliza.felizabackend.payload.ApiResponse;
