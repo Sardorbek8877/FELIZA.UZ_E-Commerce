@@ -30,9 +30,9 @@ public class JwtTokenUtil {
     public String generateAccessToken(Map<String,Object> extraClaims, Customer customer){
         return Jwts.builder()
                 .setClaims(extraClaims)
-                .setSubject(String.format("%s,%s", customer.getId(), customer.getEmail()))
+                .setSubject(String.format("%s,%s", customer.getId(), customer.getPhoneNumber()))
                 .setIssuer("CodeJava")
-                .claim("roles", customer.getRoles().toString())
+                .claim("roles", customer.getRole().toString())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.JWT_EXPIRATION))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)

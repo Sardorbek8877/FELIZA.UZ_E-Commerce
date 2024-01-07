@@ -1,5 +1,6 @@
 package uz.feliza.felizabackend.service;
 
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,33 +11,78 @@ import uz.feliza.felizabackend.entity.enums.RoleName;
 import uz.feliza.felizabackend.exception.PasswordEmptyException;
 import uz.feliza.felizabackend.exception.PhoneNumberAlreadyExistsException;
 import uz.feliza.felizabackend.exception.UserAlreadyExistsException;
+import uz.feliza.felizabackend.payload.ApiResponse;
 import uz.feliza.felizabackend.repository.CustomerRepository;
 import uz.feliza.felizabackend.repository.RoleRepository;
 import uz.feliza.felizabackend.repository.VerificationTokenRepository;
 import uz.feliza.felizabackend.request.RegisterRequest;
+import uz.feliza.felizabackend.sms.SendSmsService;
 
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Optional;
 @Service
 @RequiredArgsConstructor
-public class AuthService implements IAuthService{
+public class AuthService {
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final VerificationTokenRepository tokenRepository;
+    private final SendSmsService sendSmsService;
 
-    @Override
+    public boolean isRegistered( String phoneNumber){
+        Optional<Customer> optionalCustomer = customerRepository.findByPhoneNumber(phoneNumber);
+        if (optionalCustomer.isPresent() && optionalCustomer.get().isEnabled())
+            return true;
+
+        String generatedRandomFourDigitNumber = sendSmsService.generateRandomFourDigitNumber();
+        Customer customer = new Customer();
+        customer.setPhoneNumber(phoneNumber);
+        customer.setVerifyCode(generatedRandomFourDigitNumber);
+        customerRepository.save(customer);
+
+        String verifyCodeMessage = "Sizning tasdiqlash kodingiz: " + generatedRandomFourDigitNumber + ". Kodni begonalarga bermang!";
+        sendSmsService.sendSmsToCustomer(phoneNumber, verifyCodeMessage);
+        return false;
+    }
+
+    public ApiResponse register(RegisterRequest registerRequest){
+        Optional<Customer> optionalCustomer = customerRepository.findByPhoneNumber(registerRequest.getPhoneNumber());
+        if (optionalCustomer.isEmpty())
+            return new ApiResponse("Bunday raqamli mijoz topilmadi", false);
+
+        if (optionalCustomer.get().isEnabled())
+            return new ApiResponse("Siz allaqachon ro'yxatdan o'tgansiz!", false);
+
+        if (!registerRequest.getVerifyCode().equals(optionalCustomer.get().getVerifyCode()))
+            return new ApiResponse("Tasdiqlash kodi noto'g'ri!", false);
+
+        Customer newCustomer = optionalCustomer.get();
+        newCustomer.setFullName(registerRequest.getFullName());
+        newCustomer.setBirthDate(registerRequest.getBirthDate());
+        newCustomer.setEnabled(true);
+
+        if (registerRequest.getPassword().isBlank())
+            throw new PasswordEmptyException("Password is empty!");
+        newCustomer.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+
+        customerRepository.save(newCustomer);
+
+        return new ApiResponse("Siz muvaffaqiyatli ro'yxatdan o'tdingiz", true);
+    }
+
+
+
     public Customer registerAdmin(RegisterRequest request) {
-        Optional<Customer> customer = this.findByEmail(request.getEmail());
+        Optional<Customer> customer = this.customerRepository.findByPhoneNumber(request.getPhoneNumber());
         if (customer.isPresent()){
             throw new UserAlreadyExistsException(
-                    "Admin with email " + request.getEmail() + " already exists!");
+                    "Admin with email " + request.getPhoneNumber() + " already exists!");
         }
 
         var newAdmin = new Customer();
         newAdmin.setFullName(request.getFullName());
-        newAdmin.setEmail(request.getEmail());
+        newAdmin.setPhoneNumber(request.getPhoneNumber());
         if(request.getPassword().isBlank()){
             throw new PasswordEmptyException("Admin password is empty!");
         }
@@ -56,32 +102,31 @@ public class AuthService implements IAuthService{
             Role savedRole = roleRepository.save(role);
             roleAdmin = Optional.of(savedRole);
         }
-        newAdmin.setRoles(Collections.singleton(roleAdmin.get()));
+//        newAdmin.setRoles(Collections.singleton(roleAdmin.get()));
         return customerRepository.save(newAdmin);
     }
 
-    @Override
-    public Customer register(RegisterRequest request) {
-        Optional<Customer> customer = this.findByEmail(request.getEmail());
+    public Customer registerDemo(RegisterRequest request) {
+        Optional<Customer> customer = this.customerRepository.findByPhoneNumber(request.getPhoneNumber());
         if (customer.isPresent()){
             throw new UserAlreadyExistsException(
-                    "Customer with email " + request.getEmail() + " already exists!");
+                    "Customer with email " + request.getPhoneNumber() + " already exists!");
         }
 
         var newCustomer = new Customer();
         newCustomer.setFullName(request.getFullName());
-        newCustomer.setEmail(request.getEmail());
+        newCustomer.setPhoneNumber(request.getPhoneNumber());
         if(request.getPassword().isBlank()){
               throw new PasswordEmptyException("Customer password is empty!");
         }
         newCustomer.setPassword(passwordEncoder.encode(request.getPassword()));
         newCustomer.setBirthDate(request.getBirthDate());
 
-        Optional<Customer> phoneNumber = customerRepository.findByPhoneNumber(request.getPhoneNumber());
-        if (phoneNumber.isPresent())
-            throw new PhoneNumberAlreadyExistsException(
-                    "Customer with phone number " + request.getPhoneNumber() + " already exists!");
-        newCustomer.setPhoneNumber(request.getPhoneNumber());
+//        Optional<Customer> phoneNumber = customerRepository.findByPhoneNumber(request.getPhoneNumber());
+//        if (phoneNumber.isPresent())
+//            throw new PhoneNumberAlreadyExistsException(
+//                    "Customer with phone number " + request.getPhoneNumber() + " already exists!");
+//        newCustomer.setPhoneNumber(request.getPhoneNumber());
 
         Optional<Role> roleCustomer = roleRepository.findByRoleName(RoleName.CUSTOMER);
         if (roleCustomer.isEmpty()){
@@ -90,22 +135,19 @@ public class AuthService implements IAuthService{
             Role savedRole = roleRepository.save(role);
             roleCustomer = Optional.of(savedRole);
         }
-        newCustomer.setRoles(Collections.singleton(roleCustomer.get()));
+//        newCustomer.setRoles(Collections.singleton(roleCustomer.get()));
         return customerRepository.save(newCustomer);
     }
 
-    @Override
-    public Optional<Customer> findByEmail(String email) {
-        return customerRepository.findByEmail(email);
+    public Optional<Customer> findByPhoneNumber(String phoneNumber) {
+        return customerRepository.findByPhoneNumber(phoneNumber);
     }
 
-    @Override
     public void saveCustomerVerificationToken(Customer customer, String token) {
         var verificationToken = new VerificationToken(token, customer);
         tokenRepository.save(verificationToken);
     }
 
-    @Override
     public String validateToken(String theToken) {
         VerificationToken token = tokenRepository.findByToken(theToken);
         if(token == null) return "Invalid verification token";

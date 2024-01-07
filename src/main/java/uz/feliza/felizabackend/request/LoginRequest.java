@@ -9,7 +9,7 @@ public class LoginRequest{
 
     @Email
     @Length(min = 5, max = 50)
-    String email;
+    String phoneNumber;
 
     @Length(min = 5, max = 15)
     String password;

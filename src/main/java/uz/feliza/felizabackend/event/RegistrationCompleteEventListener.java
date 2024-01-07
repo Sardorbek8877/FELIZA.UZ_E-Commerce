@@ -40,30 +40,30 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
         String urlAdmin = event.getApplicationUrl() + "/api/auth/register/admin/verifyEmail?token=" + verificationToken;
 
         //5. send the email to the user
-        try {
-            sendVerificationEmail(urlCustomer);
-            sendVerificationEmail(urlAdmin);
-        } catch (MessagingException | UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+////            sendVerificationEmail(urlCustomer);
+////            sendVerificationEmail(urlAdmin);
+//        } catch (MessagingException | UnsupportedEncodingException e) {
+//            throw new RuntimeException(e);
+//        }
         log.info("Click the link to verify your registration (CUSTOMER): {}", urlCustomer);
         log.info("Click the link to verify your registration (ADMIN): {}", urlAdmin);
     }
 
-    public void sendVerificationEmail(String url) throws MessagingException, UnsupportedEncodingException {
-        String subject = "Verification Email";
-        String senderName = "User Registration Portal Service";
-        String mailContent = "<p> Hi, "+ customer.getFullName()+ ", </p>"+
-                "<p>Thank you for registering with us, " +
-                "Please, follow the link below to complete your registration.</p>"+
-                "<a href=\"" +url+ "\">Verify your email to activate your account</a>"+
-                "<p> Thank you <br> Users Registration Portal Service";
-        MimeMessage message = mailSender.createMimeMessage();
-        var messageHelper = new MimeMessageHelper(message);
-        messageHelper.setFrom("nodirbeknurqulov096@gmail.com", senderName);
-        messageHelper.setTo(customer.getEmail());
-        messageHelper.setSubject(subject);
-        messageHelper.setText(mailContent, true);
-        mailSender.send(message);
-    }
+//    public void sendVerificationEmail(String url) throws MessagingException, UnsupportedEncodingException {
+//        String subject = "Verification Email";
+//        String senderName = "User Registration Portal Service";
+//        String mailContent = "<p> Hi, "+ customer.getFullName()+ ", </p>"+
+//                "<p>Thank you for registering with us, " +
+//                "Please, follow the link below to complete your registration.</p>"+
+//                "<a href=\"" +url+ "\">Verify your email to activate your account</a>"+
+//                "<p> Thank you <br> Users Registration Portal Service";
+//        MimeMessage message = mailSender.createMimeMessage();
+//        var messageHelper = new MimeMessageHelper(message);
+//        messageHelper.setFrom("nodirbeknurqulov096@gmail.com", senderName);
+//        messageHelper.setTo(customer.getEmail());
+//        messageHelper.setSubject(subject);
+//        messageHelper.setText(mailContent, true);
+//        mailSender.send(message);
+//    }
 }

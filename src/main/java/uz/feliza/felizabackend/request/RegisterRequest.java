@@ -6,14 +6,15 @@ import lombok.Data;
 import java.util.Date;
 @Data
 public class RegisterRequest{
-        String fullName;
+        private String fullName;
 
-        String email;
+        private String phoneNumber;
+//        String email;
 
-        String password;
+        private String password;
 
         @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd-MM-yyyy")
-        Date birthDate;
+        private Date birthDate;
 
-        String phoneNumber;
+        private String verifyCode;
 }

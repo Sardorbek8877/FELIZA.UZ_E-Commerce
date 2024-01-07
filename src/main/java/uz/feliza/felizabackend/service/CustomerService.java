@@ -19,4 +19,9 @@ public class CustomerService {
         //todo: update customer
         return null;
     }
+
+    //isregistered checkPhoneNumber true false - sendVerifyCode
+    //if registered login(password) else register
+    //register
+    //
 }

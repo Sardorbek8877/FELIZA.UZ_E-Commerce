@@ -16,8 +16,10 @@ import uz.feliza.felizabackend.entity.Customer;
 import uz.feliza.felizabackend.entity.VerificationToken;
 import uz.feliza.felizabackend.event.RegistrationCompleteEvent;
 import uz.feliza.felizabackend.exception.UsernameNotFoundException;
+import uz.feliza.felizabackend.payload.ApiResponse;
 import uz.feliza.felizabackend.payload.AuthResponse;
 import uz.feliza.felizabackend.request.LoginRequest;
+import uz.feliza.felizabackend.request.PhoneNumberRequest;
 import uz.feliza.felizabackend.request.RegisterRequest;
 import uz.feliza.felizabackend.repository.VerificationTokenRepository;
 import uz.feliza.felizabackend.service.AuthService;
@@ -36,32 +38,31 @@ public class AuthController {
     private final VerificationTokenRepository tokenRepository;
     private final AuthenticationManager authenticationManager;
 
-    @PostMapping("/register/admin")
-    public String registerAdmin(@RequestBody @Valid RegisterRequest registerRequest, final HttpServletRequest httpServletRequest){
-        Customer customer = authService.registerAdmin(registerRequest);
-        publisher.publishEvent(new RegistrationCompleteEvent(customer,applicationUrl(httpServletRequest)));
-        return "Success! Please, check your email to complete your registration";
+    @PostMapping("/isRegistered")
+    public ResponseEntity<?> isRegistered(@RequestBody PhoneNumberRequest phoneNumberRequest){
+        boolean registered = authService.isRegistered(phoneNumberRequest.getPhoneNumber());
+        return ResponseEntity.ok(registered);
     }
+
     @PostMapping("/register")
-    public String registerUser(@RequestBody @Valid RegisterRequest registerRequest, final HttpServletRequest httpServletRequest){
-        Customer customer = authService.register(registerRequest);
-        publisher.publishEvent(new RegistrationCompleteEvent(customer,applicationUrl(httpServletRequest)));
-        return "Success! Please, check your email to complete your registration";
+    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest){
+        ApiResponse apiResponse = authService.register(registerRequest);
+        return ResponseEntity.status(apiResponse.isSuccess() ? HttpStatus.ACCEPTED : HttpStatus.BAD_REQUEST).body(apiResponse);
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
         try {
-            Optional<Customer> customer = authService.findByEmail(loginRequest.getEmail());
+            Optional<Customer> customer = authService.findByPhoneNumber(loginRequest.getPhoneNumber());
 
             Authentication authenticate = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginRequest.getEmail(), loginRequest.getPassword()));
+                            loginRequest.getPhoneNumber(), loginRequest.getPassword()));
 
             if (customer.isPresent()){
                 Customer existingCustomer = (Customer) authenticate.getPrincipal();
                 String accessToken = jwtTokenUtil.generateAccessToken(existingCustomer);
-                AuthResponse response = new AuthResponse(existingCustomer.getEmail(),accessToken);
+                AuthResponse response = new AuthResponse(existingCustomer.getPhoneNumber(),accessToken);
                 return ResponseEntity.ok(response);
             }else
                 throw new UsernameNotFoundException("Customer not found. Please, you should register first");
@@ -69,6 +70,25 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
+
+
+
+
+    @PostMapping("/register/admin")
+    public String registerAdmin(@RequestBody @Valid RegisterRequest registerRequest, final HttpServletRequest httpServletRequest){
+        Customer customer = authService.registerAdmin(registerRequest);
+        publisher.publishEvent(new RegistrationCompleteEvent(customer,applicationUrl(httpServletRequest)));
+        return "Success! Please, check your email to complete your registration";
+    }
+    @PostMapping("/regist")
+    public String registerUser(@RequestBody @Valid RegisterRequest registerRequest, final HttpServletRequest httpServletRequest){
+        Customer customer = authService.registerDemo(registerRequest);
+        publisher.publishEvent(new RegistrationCompleteEvent(customer,applicationUrl(httpServletRequest)));
+        return "Success! Please, check your email to complete your registration";
+    }
+
+
     @GetMapping("/register/verifyEmail")
     public String verifyEmail(@RequestParam("token") String token){
         VerificationToken theToken = tokenRepository.findByToken(token);

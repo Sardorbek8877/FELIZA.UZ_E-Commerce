@@ -9,8 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.NaturalId;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import uz.feliza.felizabackend.entity.enums.RoleName;
 import uz.feliza.felizabackend.entity.template.AbstractLongEntity;
@@ -22,10 +22,13 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "customers")
 public class Customer extends AbstractLongEntity implements UserDetails {
 
-    @Column(nullable = false)
+    public Customer(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    @Column//(nullable = false)
     @Size(min = 2, max = 50, message = "ism familiya 2 ta harfdan dan 50 ta harfgacha oraliqda bo'lishi kerak ")
     private String fullName;
 
@@ -33,49 +36,38 @@ public class Customer extends AbstractLongEntity implements UserDetails {
     @NotBlank(message = "telefon nomer kiriilishi kerak")
     private String phoneNumber;
 
-    @Column(length = 50, nullable = false, unique = true)
-    @NaturalId(mutable = true)
-    @NotBlank(message = "email address kiritilishi kerak")
-    private String email;
 
-    @Column(nullable = false, length = 64)
-    @NotBlank(message = "parol kiritilishi kerak")
-    @NotNull()
+//    @NotBlank(message = "parol kiritilishi kerak")
+//    @NotNull()
+    @Column( length = 64)
     private String password;
 
     @Temporal(TemporalType.DATE)
     private Date birthDate;
-//    @Column(nullable = false)
-//    private LocalDate birthDate;
 
     private Long saleSum;
 
     private Date lastSeen;
+
+    private String verifyCode;
 
     @ManyToOne
     private Status status;
 
     private boolean enabled = false;
 
-    public void addRole(Role role) {
-        this.roles.add(role);
-    }
-
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "customers_roles", joinColumns = @JoinColumn(name = "customer_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    private RoleName role = RoleName.CUSTOMER;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return Collections.singletonList(new SimpleGrantedAuthority(role.toString()));
     }
-
-
 
     @Override
     public String getUsername() {
-        return email;
+        return phoneNumber;
     }
 
     @Override

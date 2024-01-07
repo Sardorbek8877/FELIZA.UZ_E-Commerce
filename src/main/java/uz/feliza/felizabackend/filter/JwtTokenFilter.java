@@ -70,7 +70,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String[] subjectArray = subject.split(",");
 
         customerDetails.setId(Long.parseLong(subjectArray[0]));
-        customerDetails.setEmail(subjectArray[1]);
+        customerDetails.setPhoneNumber(subjectArray[1]);
         return customerDetails;
     }
 
